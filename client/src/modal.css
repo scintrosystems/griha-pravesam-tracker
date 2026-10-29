@@ -1,0 +1,215 @@
+/* ==========================================================================
+   DEDICATED MODAL STYLES (modal.css)
+   Clean, modern, cohesive styling for all dialogs & inputs
+   ========================================================================== */
+
+/* 1. Backdrop with Smooth Blur */
+.modal-backdrop-custom {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    overflow-y: auto;
+}
+
+/* 2. Modal Dialog Container */
+.modal-modern {
+    font-size: 13.5px;
+    background: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalScaleIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* 3. Modal Header */
+.modal-header-modern {
+    padding: 1rem 1.25rem;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-header-modern .header-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #fffbeb;
+    color: #d97706;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.modal-header-modern .header-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+/* 4. Form Labels */
+.modal-label {
+    font-size: 12.5px !important;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.modal-label i {
+    color: #d97706;
+    font-size: 0.8rem;
+}
+
+/* 5. Inputs & Selects */
+.modal-input,
+.modal-select {
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 13.5px !important;
+    color: #1e293b;
+    background-color: #ffffff;
+    transition: all 0.15s ease-in-out;
+}
+
+.modal-input:focus,
+.modal-select:focus {
+    border-color: #d97706;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.14);
+}
+
+.modal-input::placeholder {
+    color: #94a3b8;
+    font-size: 0.78rem;
+}
+
+/* 6. Seamless Input Group Addon (+ Button) */
+.modal-input-group {
+    display: flex;
+    width: 100%;
+}
+
+.modal-input-group .modal-select {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    flex: 1;
+}
+
+.modal-input-group .btn-addon-add {
+    border: 1px solid #cbd5e1;
+    border-left: none;
+    border-top-right-radius: 0.5rem !important;
+    border-bottom-right-radius: 0.5rem !important;
+    background: #f8fafc;
+    color: #d97706;
+    padding: 0 0.65rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: all 0.15s;
+}
+
+.modal-input-group .btn-addon-add:hover {
+    background: #fffbeb;
+    color: #b45309;
+}
+
+/* 7. Modal Footer */
+.modal-footer-modern {
+    padding: 0.85rem 1.25rem;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.modal-footer-modern .btn-cancel {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 0.45rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.15s;
+}
+
+.modal-footer-modern .btn-cancel:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.btn-submit {
+    background: var(--theme-amber, #d97706) !important;
+    border: 1px solid var(--theme-amber, #d97706) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    padding: 0.45rem 1rem !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 1px 2px rgba(217, 119, 6, 0.2) !important;
+    transition: all 0.15s ease-in-out !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+.btn-submit:hover,
+.btn-submit:active {
+    background: var(--theme-amber-dark, #b45309) !important;
+    border-color: var(--theme-amber-dark, #b45309) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.25) !important;
+}
+
+/* Responsive adjustment for 320px */
+@media (max-width: 360px) {
+    .modal-backdrop-custom {
+        padding: 0.4rem;
+    }
+
+    .modal-header-modern {
+        padding: 0.75rem 0.9rem;
+    }
+
+    .modal-footer-modern {
+        padding: 0.65rem 0.9rem;
+    }
+}
