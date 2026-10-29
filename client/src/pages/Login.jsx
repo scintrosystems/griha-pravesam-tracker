@@ -10,14 +10,19 @@ export default function Login() {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await login(username, password);
-            navigate('/admin');
-        } catch (err) {
-            setError(err.response?.data?.error || 'Invalid credentials');
-        }
-    };
+    e.preventDefault();
+    setError('');
+    try {
+      await login(username, password);
+      navigate('/admin');
+    } catch (err) {
+      if (!err.response) {
+        setError('Cannot reach server on port 5000. Is the backend terminal running?');
+      } else {
+        setError(err.response?.data?.error || 'Invalid credentials');
+      }
+    }
+  };
 
     return (
         <div className="container py-5 d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>

@@ -8,28 +8,37 @@ import ExpenseOverview from '../components/ExpenseOverview';
 export default function PublicView() {
     const [tabs, setTabs] = useState([]);
     const [items, setItems] = useState([]);
+    const [lookups, setLookups] = useState([]); // Added state
     const [activeTab, setActiveTab] = useState('dayview');
     const [selectedDate, setSelectedDate] = useState('');
     const [search, setSearch] = useState('');
-    const [timeSort, setTimeSort] = useState('none'); // 'none' | 'asc' | 'desc'
+    const [timeSort, setTimeSort] = useState('none');
     const [loading, setLoading] = useState(true);
 
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const [tabsRes, itemsRes, lookupsRes] = await Promise.all([
+                API.get('/tabs').catch(() => ({ data: [] })),
+                API.get('/items').catch(() => ({ data: [] })),
+                API.get('/lookups').catch(() => ({ data: [] }))
+            ]);
+
+            // Always guarantee arrays
+            setTabs(Array.isArray(tabsRes.data) ? tabsRes.data : []);
+            setItems(Array.isArray(itemsRes.data) ? itemsRes.data : []);
+            setLookups(Array.isArray(lookupsRes.data) ? lookupsRes.data : []);
+        } catch (err) {
+            console.error('Failed to load data', err);
+            setItems([]);
+            setTabs([]);
+            setLookups([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const [tabsRes, itemsRes] = await Promise.all([
-                    API.get('/tabs'),
-                    API.get('/items')
-                ]);
-                setTabs(tabsRes.data);
-                setItems(itemsRes.data);
-            } catch (err) {
-                console.error('Failed to load data', err);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchData();
     }, []);
 
@@ -39,18 +48,23 @@ export default function PublicView() {
         else setTimeSort('none');
     };
 
-    let filteredItems = items;
+    // Safe array fallback
+    const safeItems = Array.isArray(items) ? items : [];
+
+    let filteredItems = safeItems;
     if (selectedDate) {
-        filteredItems = filteredItems.filter(i => i.date === selectedDate);
+        filteredItems = filteredItems.filter(i => i && i.date === selectedDate);
     }
     if (search.trim()) {
         const q = search.toLowerCase();
         filteredItems = filteredItems.filter(i =>
-            i.title?.toLowerCase().includes(q) ||
-            i.notes?.toLowerCase().includes(q) ||
-            i.details?.toLowerCase().includes(q) ||
-            i.location?.name?.toLowerCase().includes(q) ||
-            i.inCharge?.name?.toLowerCase().includes(q)
+            i && (
+                i.title?.toLowerCase().includes(q) ||
+                i.description?.toLowerCase().includes(q) ||
+                i.details?.toLowerCase().includes(q) ||
+                i.location?.name?.toLowerCase().includes(q) ||
+                i.inCharge?.name?.toLowerCase().includes(q)
+            )
         );
     }
 
@@ -59,15 +73,15 @@ export default function PublicView() {
 
     const tabSpecificItems = activeTab === 'dayview'
         ? filteredItems
-        : filteredItems.filter(i => i.tabSlug === activeTab);
+        : filteredItems.filter(i => i && i.tabSlug === activeTab);
 
-    // Exact KPI Calculations
-    const readyEvents = items.filter(i => i.tabSlug === 'schedule' && (i.status === 'Confirmed' || i.status === 'Completed')).length;
-    const totalEvents = items.filter(i => i.tabSlug === 'schedule').length;
+    // Exact KPI Calculations using safeItems
+    const readyEvents = safeItems.filter(i => i && i.tabSlug === 'schedule' && (i.status === 'Confirmed' || i.status === 'Completed')).length;
+    const totalEvents = safeItems.filter(i => i && i.tabSlug === 'schedule').length;
     const readinessPct = totalEvents > 0 ? Math.round((readyEvents / totalEvents) * 100) : 0;
-    const logisticsCount = items.filter(i => i.tabSlug === 'rooms' || i.tabSlug === 'vehicles').length;
-    const pendingShopping = items.filter(i => i.tabSlug === 'shopping' && i.status !== 'Completed').length;
-    const totalTasks = items.filter(i => i.tabSlug === 'todo').length;
+    const logisticsCount = safeItems.filter(i => i && (i.tabSlug === 'rooms' || i.tabSlug === 'vehicles')).length;
+    const pendingShopping = safeItems.filter(i => i && (i.tabSlug === 'purchase' || i.tabSlug === 'shopping') && i.status !== 'Completed').length;
+    const totalTasks = safeItems.filter(i => i && i.tabSlug === 'todo').length;
 
     const currentTabLabel = activeTab === 'dayview'
         ? 'Day-by-Day Master'

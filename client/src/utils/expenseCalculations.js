@@ -27,7 +27,8 @@ export const getNumericPaid = (item) => {
 
 // Calculate expenses for a specific section
 export const calculateSectionExpenses = (items, tabSlug) => {
-    const sectionItems = items.filter(i => i.tabSlug === tabSlug);
+    const safeList = Array.isArray(items) ? items : [];
+    const sectionItems = safeList.filter(i => i && i.tabSlug === tabSlug);
 
     let total = 0;
     let paid = 0;
@@ -41,23 +42,18 @@ export const calculateSectionExpenses = (items, tabSlug) => {
     const paidPct = total > 0 ? Math.round((paid / total) * 100) : 0;
     const balancePct = total > 0 ? (100 - paidPct) : 0;
 
-    return {
-        total,
-        paid,
-        balance,
-        paidPct,
-        balancePct,
-        count: sectionItems.length
-    };
+    return { total, paid, balance, paidPct, balancePct, count: sectionItems.length };
 };
 
 // Calculate grand total & section-wise percentage share
 export const calculateOverallExpenses = (items, tabs) => {
+    const safeItems = Array.isArray(items) ? items : [];
+    const safeTabs = Array.isArray(tabs) ? tabs : [];
+
     let grandTotal = 0;
     let grandPaid = 0;
 
-    // 1. Calculate Grand Totals
-    items.forEach(item => {
+    safeItems.forEach(item => {
         grandTotal += getNumericCost(item);
         grandPaid += getNumericPaid(item);
     });
@@ -66,11 +62,10 @@ export const calculateOverallExpenses = (items, tabs) => {
     const overallPaidPct = grandTotal > 0 ? Math.round((grandPaid / grandTotal) * 100) : 0;
     const overallBalancePct = grandTotal > 0 ? (100 - overallPaidPct) : 0;
 
-    // 2. Calculate Section-wise Breakdown (% share of total budget)
-    const displayTabs = tabs.filter(t => t.slug !== 'dayview');
+    const displayTabs = safeTabs.filter(t => t && t.slug !== 'dayview');
 
     const sectionBreakdown = displayTabs.map((tab, idx) => {
-        const stats = calculateSectionExpenses(items, tab.slug);
+        const stats = calculateSectionExpenses(safeItems, tab.slug);
         const budgetSharePct = grandTotal > 0 ? ((stats.total / grandTotal) * 100).toFixed(1) : 0;
 
         return {

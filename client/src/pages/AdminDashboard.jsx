@@ -28,15 +28,18 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
         try {
             setLoading(true);
             const [tabsRes, itemsRes, lookupsRes] = await Promise.all([
-                API.get('/tabs'),
-                API.get('/items'),
-                API.get('/lookups')
+                API.get('/tabs').catch(() => ({ data: [] })),
+                API.get('/items').catch(() => ({ data: [] })),
+                API.get('/lookups').catch(() => ({ data: [] }))
             ]);
-            setTabs(tabsRes.data);
-            setItems(itemsRes.data);
-            setLookups(lookupsRes.data);
+
+            setTabs(Array.isArray(tabsRes.data) ? tabsRes.data : []);
+            setItems(Array.isArray(itemsRes.data) ? itemsRes.data : []);
+            setLookups(Array.isArray(lookupsRes.data) ? lookupsRes.data : []);
         } catch (err) {
             console.error('Failed to load data', err);
+            setItems([]);
+            setTabs([]);
         } finally {
             setLoading(false);
         }
@@ -83,17 +86,21 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
         }
     };
 
-    let filteredItems = items;
+    const safeItems = Array.isArray(items) ? items : [];
+
+    let filteredItems = safeItems;
     if (selectedDate) {
-        filteredItems = filteredItems.filter(i => i.date === selectedDate);
+        filteredItems = filteredItems.filter(i => i && i.date === selectedDate);
     }
     if (search.trim()) {
         const q = search.toLowerCase();
         filteredItems = filteredItems.filter(i =>
-            i.title?.toLowerCase().includes(q) ||
-            i.notes?.toLowerCase().includes(q) ||
-            i.location?.name?.toLowerCase().includes(q) ||
-            i.inCharge?.name?.toLowerCase().includes(q)
+            i && (
+                i.title?.toLowerCase().includes(q) ||
+                i.description?.toLowerCase().includes(q) ||
+                i.location?.name?.toLowerCase().includes(q) ||
+                i.inCharge?.name?.toLowerCase().includes(q)
+            )
         );
     }
 
