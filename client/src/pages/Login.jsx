@@ -5,24 +5,22 @@ import { useAuth } from '../context/AuthContext';
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      await login(username, password);
-      navigate('/admin');
-    } catch (err) {
-      if (!err.response) {
-        setError('Cannot reach server on port 5000. Is the backend terminal running?');
-      } else {
-        setError(err.response?.data?.error || 'Invalid credentials');
-      }
-    }
-  };
+        e.preventDefault();
+        setError('');
+
+        try {
+            await login(username, password);
+            navigate('/admin');
+        } catch (err) {
+            setError(err.response?.data?.error || 'Invalid username or password');
+        }
+    };
 
     return (
         <div className="container py-5 d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
@@ -55,19 +53,29 @@ export default function Login() {
                         />
                     </div>
 
+                    {/* Password Field with Eye Show/Hide Toggle */}
                     <div className="mb-3">
                         <label className="form-label small fw-semibold text-secondary mb-1">Password</label>
-                        <input
-                            type="password"
-                            className="form-control form-control-sm"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
-                            required
-                        />
+                        <div className="input-group input-group-sm">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                className="form-control form-control-sm"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="••••••••"
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={() => setShowPassword(!showPassword)}
+                                title={showPassword ? 'Hide password' : 'Show password'}
+                            >
+                                <i className={`bi ${showPassword ? 'bi-eye-slash-fill text-amber' : 'bi-eye-fill'}`}></i>
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Login Button in Brand Amber */}
                     <button type="submit" className="btn btn-amber w-100 fw-bold shadow-sm py-2">
                         Login
                     </button>

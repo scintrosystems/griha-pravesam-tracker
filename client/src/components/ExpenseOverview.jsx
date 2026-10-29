@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { calculateOverallExpenses } from '../utils/expenseCalculations';
 
 export default function ExpenseOverview({ items, tabs }) {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const data = calculateOverallExpenses(items, tabs);
 
     return (
