@@ -1,0 +1,63 @@
+.section-expense-ribbon {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 0.65rem;
+    padding: 0.65rem 0.85rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* Icon Circle */
+.section-expense-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--theme-amber-subtle, #fffbeb);
+    color: var(--theme-amber, #d97706);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+/* Financial Stat Item */
+.section-expense-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.section-expense-stat .stat-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.section-expense-stat .stat-value {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* Vertical Divider between Stats */
+.section-expense-divider {
+    border-left: 1px solid #e2e8f0;
+    padding-left: 0.85rem;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+    .section-expense-ribbon {
+        padding: 0.5rem 0.65rem;
+    }
+
+    .section-expense-divider {
+        padding-left: 0.5rem;
+    }
+
+    .section-expense-stat .stat-value {
+        font-size: 12.5px;
+    }
+}

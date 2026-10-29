@@ -1,0 +1,165 @@
+.day-master-banner {
+    padding: 1rem 1.25rem !important;
+    border-radius: 0.85rem;
+    background-color: var(--theme-amber-subtle, #fffbeb) !important;
+    border: 1px solid var(--theme-amber-border, #fde68a) !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.day-master-banner-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--theme-amber, #d97706);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+}
+
+.day-master-banner-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.day-master-banner-sub {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 3px;
+    display: block;
+}
+
+.day-master-badge {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* 2. Section Card Container */
+.day-master-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+}
+
+.day-master-card-header {
+    padding: 0.65rem 1rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.day-master-card-body {
+    padding: 0.75rem 1rem !important;
+    flex-grow: 1;
+}
+
+/* 3. Section Header Themed Colors */
+.sec-header-schedule {
+    background: #fffbeb !important;
+    color: #92400e !important;
+}
+
+.sec-header-food {
+    background: #ecfdf5 !important;
+    color: #065f46 !important;
+}
+
+.sec-header-rooms {
+    background: #eff6ff !important;
+    color: #1e40af !important;
+}
+
+.sec-header-vehicles {
+    background: #f0fdfa !important;
+    color: #115e59 !important;
+}
+
+.sec-header-shopping,
+.sec-header-purchase {
+    background: #f5f3ff !important;
+    color: #5b21b6 !important;
+}
+
+.sec-header-todo {
+    background: #fff1f2 !important;
+    color: #9f1239 !important;
+}
+
+.sec-header-contacts {
+    background: #f8fafc !important;
+    color: #334155 !important;
+}
+
+.sec-header-custom {
+    background: #fffbeb !important;
+    color: #b45309 !important;
+}
+
+/* 4. Item Row Card */
+.day-master-item {
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    transition: all 0.15s ease;
+}
+
+.day-master-item:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Compact & Clean Empty State inside Section Cards */
+.day-master-empty-state {
+    text-align: center;
+    padding: 1.5rem 1rem !important;
+    color: #94a3b8;
+}
+
+.day-master-empty-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.day-master-empty-text {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin: 0;
+}
+
+@media (max-width: 480px) {
+    .day-master-banner {
+        padding: 0.85rem !important;
+    }
+}

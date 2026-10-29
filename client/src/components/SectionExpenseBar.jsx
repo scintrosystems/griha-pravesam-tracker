@@ -1,4 +1,5 @@
 import React from 'react';
+import './SectionExpenseBar.css';
 import { calculateSectionExpenses, calculateOverallExpenses } from '../utils/expenseCalculations';
 
 export default function SectionExpenseBar({ items, tabSlug, tabs, tabLabel }) {
@@ -10,10 +11,11 @@ export default function SectionExpenseBar({ items, tabSlug, tabs, tabLabel }) {
     : 0;
 
   return (
-    <div className="custom-card p-2.5 mb-2.5 bg-white border d-flex flex-wrap align-items-center justify-content-between gap-2 shadow-xs">
+    <div className="section-expense-ribbon mb-2.5 d-flex flex-wrap align-items-center justify-content-between gap-2">
+      {/* Left Info: Icon & Section Name */}
       <div className="d-flex align-items-center gap-2">
-        <div className="rounded-circle p-1.5 bg-amber-subtle text-amber d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}>
-          <i className="bi bi-wallet2 fs-6"></i>
+        <div className="section-expense-icon">
+          <i className="bi bi-wallet2"></i>
         </div>
         <div>
           <span className="fw-bold small text-dark d-block">
@@ -25,21 +27,21 @@ export default function SectionExpenseBar({ items, tabSlug, tabs, tabLabel }) {
         </div>
       </div>
 
-      {/* Amount & Percentage Stats */}
+      {/* Right Stats: Total, Paid & Balance */}
       <div className="d-flex align-items-center gap-3 flex-wrap">
-        <div>
-          <span className="text-muted small d-block" style={{ fontSize: '10px' }}>Total Cost</span>
-          <span className="fw-bold text-dark">₹{sectionStats.total.toLocaleString('en-IN')}</span>
+        <div className="section-expense-stat">
+          <span className="stat-label">Total Cost</span>
+          <span className="stat-value text-dark">₹{sectionStats.total.toLocaleString('en-IN')}</span>
         </div>
 
-        <div className="border-start ps-3">
-          <span className="text-muted small d-block" style={{ fontSize: '10px' }}>Paid ({sectionStats.paidPct}%)</span>
-          <span className="fw-bold text-success">₹{sectionStats.paid += 0 ? sectionStats.paid.toLocaleString('en-IN') : 0}</span>
+        <div className="section-expense-stat section-expense-divider">
+          <span className="stat-label">Paid ({sectionStats.paidPct}%)</span>
+          <span className="stat-value text-success">₹{sectionStats.paid.toLocaleString('en-IN')}</span>
         </div>
 
-        <div className="border-start ps-3">
-          <span className="text-muted small d-block" style={{ fontSize: '10px' }}>Balance Due</span>
-          <span className={`fw-bold ${sectionStats.balance > 0 ? 'text-danger' : 'text-secondary'}`}>
+        <div className="section-expense-stat section-expense-divider">
+          <span className="stat-label">Balance Due</span>
+          <span className={`stat-value ${sectionStats.balance > 0 ? 'text-danger' : 'text-secondary'}`}>
             ₹{sectionStats.balance.toLocaleString('en-IN')}
           </span>
         </div>

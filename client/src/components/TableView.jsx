@@ -2,6 +2,7 @@ import React from 'react';
 import StatusBadge from './StatusBadge';
 import API from '../api/axiosClient';
 import SectionExpenseBar from './SectionExpenseBar';
+import './TableView.css';
 
 export default function TableView({
     items,

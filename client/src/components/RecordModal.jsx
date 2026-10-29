@@ -759,7 +759,7 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
 
                                 <div className="col-12 col-sm-4">
                                     <label className="text-muted small d-block mb-1">Balance Due</label>
-                                    <div className="p-1.5 bg-white border rounded text-center fw-bold">
+                                    <div className="balance-display-box">
                                         ₹{Math.max(0, (Number(totalCost) || 0) - (Number(paidAmount) || 0)).toLocaleString('en-IN')}
                                     </div>
                                 </div>

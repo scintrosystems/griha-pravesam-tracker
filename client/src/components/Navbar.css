@@ -1,0 +1,20 @@
+.app-header {
+    background-color: var(--theme-amber) !important;
+    z-index: 1030;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.app-header .navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.app-header .btn-portal {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+}
+
+.app-header .btn-portal:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}

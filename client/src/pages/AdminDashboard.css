@@ -1,0 +1,33 @@
+/* Strict Vertical-Only Sidebar Drawer */
+.admin-sidebar {
+    width: 270px;
+    max-width: 82vw;
+    background-color: #ffffff;
+    border-right: 1px solid var(--card-border);
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-sidebar .nav {
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.admin-sidebar .nav-link {
+    width: 100% !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+@media (min-width: 992px) {
+    .admin-sidebar {
+        min-height: calc(100vh - 54px);
+        position: sticky;
+        top: 54px;
+    }
+}

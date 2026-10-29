@@ -124,27 +124,47 @@
 .modal-input-group .modal-select {
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
+    border-color: #cbd5e1 !important;
+    height: 36px !important;
     flex: 1;
 }
 
 .modal-input-group .btn-addon-add {
-    border: 1px solid #cbd5e1;
-    border-left: none;
+    border: 1px solid #cbd5e1 !important;
+    border-left: none !important;
     border-top-right-radius: 0.5rem !important;
     border-bottom-right-radius: 0.5rem !important;
-    background: #f8fafc;
-    color: #d97706;
-    padding: 0 0.65rem;
+    background: #f8fafc !important;
+    color: #d97706 !important;
+    padding: 0 0.75rem !important;
+    height: 36px !important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
-    transition: all 0.15s;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.15s ease-in-out;
 }
 
 .modal-input-group .btn-addon-add:hover {
-    background: #fffbeb;
-    color: #b45309;
+    background: #fffbeb !important;
+    color: #b45309 !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Balance Due Box Height & Alignment Fix */
+.balance-display-box {
+    height: 36px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #0f172a;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 /* 7. Modal Footer */

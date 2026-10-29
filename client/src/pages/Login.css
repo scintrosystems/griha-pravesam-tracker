@@ -1,0 +1,22 @@
+/* Login Page Specific Styling */
+.login-container {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    max-width: 380px;
+    width: 100%;
+}
+
+.login-shield-icon {
+    width: 64px;
+    height: 64px;
+}
+
+.login-password-addon {
+    border-left: none;
+    background: transparent;
+}

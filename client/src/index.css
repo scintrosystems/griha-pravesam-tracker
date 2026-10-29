@@ -1,3 +1,8 @@
+/* ==========================================================================
+   GLOBAL COMMON STYLES (index.css)
+   Contains shared variables, typography, and common utility classes
+   ========================================================================== */
+
 :root {
     --theme-amber: #d97706;
     --theme-amber-dark: #b45309;
@@ -22,22 +27,7 @@ body {
     line-height: 1.5;
 }
 
-.table {
-  font-size: 13.5px !important;
-}
-
-.table th {
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.table td {
-  padding: 0.75rem 0.65rem !important;
-}
-
-/* Warm Brand Amber Theme (Replaces default bootstrap yellow) */
+/* Shared Backgrounds & Text */
 .bg-theme-amber {
     background-color: var(--theme-amber) !important;
     color: #fff !important;
@@ -55,7 +45,7 @@ body {
     border-color: var(--theme-amber-border) !important;
 }
 
-/* Custom Buttons matching the brand amber */
+/* Shared Buttons */
 .btn-amber {
     background-color: var(--theme-amber) !important;
     color: #ffffff !important;
@@ -82,7 +72,7 @@ body {
     color: #ffffff !important;
 }
 
-/* Custom Card & Glassmorphism */
+/* Shared Card */
 .custom-card {
     background: #ffffff;
     border: 1px solid var(--card-border);
@@ -107,123 +97,93 @@ body {
     color: #e11d48 !important;
 }
 
-/* Strict Vertical-Only Sidebar Drawer */
-.admin-sidebar {
-    width: 270px;
-    max-width: 82vw;
-    background-color: #ffffff;
-    border-right: 1px solid var(--card-border);
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
+/* ==========================================================================
+   TARGETED POLISH: KPI Cards, Filter Bars & Addon Buttons
+   ========================================================================== */
+
+/* 1. KPI Cards Polish */
+.kpi-card-refined {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 0.75rem;
+    padding: 1rem 1.15rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    min-height: 105px;
 }
 
-.admin-sidebar .nav {
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-    width: 100% !important;
-    overflow-x: hidden !important;
+.kpi-icon-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
 }
 
-.admin-sidebar .nav-link {
-    width: 100% !important;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+.kpi-icon-events {
+    background: #fffbeb;
+    color: #d97706;
 }
 
-@media (min-width: 992px) {
-    .admin-sidebar {
-        min-height: calc(100vh - 54px);
-        position: sticky;
-        top: 54px;
-    }
+.kpi-icon-rooms {
+    background: #eff6ff;
+    color: #2563eb;
 }
 
-/* Modal Polish */
-.modal-content {
-    border-radius: 0.85rem;
-    border: 1px solid var(--card-border);
+.kpi-icon-purchase {
+    background: #f5f3ff;
+    color: #7c3aed;
 }
 
-.modal-header {
-    border-top-left-radius: 0.85rem;
-    border-top-right-radius: 0.85rem;
+.kpi-icon-todo {
+    background: #fff1f2;
+    color: #e11d48;
 }
 
-.form-control,
-.form-select {
-    border-color: #cbd5e1;
+.kpi-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin: 0;
 }
 
-.form-control:focus,
-.form-select:focus {
-    border-color: var(--theme-amber);
-    box-shadow: 0 0 0 0.2rem rgba(217, 119, 6, 0.18);
+.kpi-value {
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0.35rem 0 0.15rem 0;
 }
 
-/* Touch friendly horizontal table scroll */
-.table-responsive {
-    -webkit-overflow-scrolling: touch;
+.kpi-subtext {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin: 0;
 }
 
-/* Section-specific header styles for Day Master View */
-.sec-header-schedule {
-    background: #fffbeb !important;
-    color: #92400e !important;
-    border-color: #fde68a !important;
+/* 2. Unified Filter Bar Controls (Same 38px height everywhere) */
+.filter-bar-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
-.sec-header-food {
-    background: #ecfdf5 !important;
-    color: #065f46 !important;
-    border-color: #a7f3d0 !important;
+.filter-control-height {
+    height: 38px !important;
+    font-size: 0.85rem !important;
+    border-radius: 0.5rem !important;
 }
 
-.sec-header-rooms {
-    background: #eff6ff !important;
-    color: #1e40af !important;
-    border-color: #bfdbfe !important;
-}
-
-.sec-header-vehicles {
-    background: #f0fdfa !important;
-    color: #115e59 !important;
-    border-color: #99f6e4 !important;
-}
-
-.sec-header-shopping {
-    background: #f5f3ff !important;
-    color: #5b21b6 !important;
-    border-color: #ddd6fe !important;
-}
-
-.sec-header-todo {
-    background: #fff1f2 !important;
-    color: #9f1239 !important;
-    border-color: #fecdd3 !important;
-}
-
-.sec-header-contacts {
-    background: #f8fafc !important;
-    color: #334155 !important;
-    border-color: #e2e8f0 !important;
-}
-
-.sec-header-custom {
-    background: #fffbeb !important;
-    color: #b45309 !important;
-    border-color: #fde68a !important;
-}
-
-/* Override dropdown active color from default bootstrap blue to brand amber */
-.dropdown-item.active,
-.dropdown-item:active {
-    background-color: var(--theme-amber) !important;
-    color: #ffffff !important;
-}
-
+/* Responsive adjustments */
 @media (max-width: 360px) {
     body {
         font-size: 11.5px;

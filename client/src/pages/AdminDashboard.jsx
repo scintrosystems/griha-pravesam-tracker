@@ -8,6 +8,7 @@ import NewTabModal from '../components/NewTabModal';
 import LookupModal from '../components/LookupModal';
 import { sortItemsByTime } from '../utils/timeSort';
 import ExpenseOverview from '../components/ExpenseOverview';
+import './AdminDashboard.css';
 
 export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
     const [tabs, setTabs] = useState([]);
@@ -126,27 +127,19 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                 />
             )}
 
-            {/* Sidebar with "View Public Site" Button */}
+            {/* Sidebar */}
             <aside
                 className={`admin-sidebar p-3 shadow-sm ${sidebarOpen ? 'd-flex position-fixed top-0 start-0 h-100' : 'd-none d-lg-flex'}`}
                 style={{ zIndex: 1045 }}
             >
-                <div className="d-flex align-items-center justify-content-between pb-2 mb-2 border-bottom">
+                {/* Header: Admin */}
+                <div className="d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom">
                     <div className="d-flex align-items-center gap-2">
                         <i className="bi bi-shield-check text-amber fs-5"></i>
                         <span className="fw-bold small text-dark">Admin</span>
                     </div>
                     <button type="button" className="btn-close d-lg-none" onClick={onCloseSidebar}></button>
                 </div>
-
-                {/* View Public Site Button (Sidebar Top) */}
-                <Link
-                    to="/"
-                    className="btn btn-sm btn-outline-secondary w-100 mb-2.5 fw-semibold d-flex align-items-center justify-content-center gap-1.5"
-                >
-                    <i className="bi bi-eye text-amber"></i>
-                    <span>View Public Site</span>
-                </Link>
 
                 {/* Vertical Nav List */}
                 <ul className="nav nav-pills flex-column gap-1 mb-auto flex-nowrap w-100">
@@ -242,12 +235,12 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                 </div>
 
                 {/* Filter Bar */}
-                <div className="custom-card p-2 mb-2">
-                    <div className="row g-1.5 align-items-center">
+                <div className="filter-bar-card mb-3">
+                    <div className="row g-2 align-items-center">
                         <div className="col-12 col-md-5">
                             <input
                                 type="text"
-                                className="form-control form-control-sm py-1"
+                                className="form-control filter-control-height"
                                 placeholder="Search in this view..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -257,14 +250,14 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                         <div className="col-7 col-md-4 d-flex align-items-center gap-1">
                             <input
                                 type="date"
-                                className="form-control form-control-sm py-1 flex-grow-1"
+                                className="form-control filter-control-height flex-grow-1"
                                 value={selectedDate}
                                 onChange={(e) => setSelectedDate(e.target.value)}
                             />
                             {selectedDate && (
                                 <button
                                     type="button"
-                                    className="btn btn-sm btn-outline-secondary text-nowrap py-1 px-2"
+                                    className="btn btn-outline-secondary text-nowrap filter-control-height px-2.5"
                                     onClick={() => setSelectedDate('')}
                                 >
                                     All
@@ -275,7 +268,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                         <div className="col-5 col-md-3 text-end">
                             <button
                                 type="button"
-                                className={`btn btn-sm w-100 text-nowrap py-1 px-2 ${timeSort !== 'none' ? 'btn-amber fw-bold' : 'btn-outline-secondary'}`}
+                                className={`btn w-100 text-nowrap filter-control-height px-2 ${timeSort !== 'none' ? 'btn-amber fw-bold' : 'btn-outline-secondary'}`}
                                 onClick={toggleTimeSort}
                                 title="Toggle Time Sorting"
                             >

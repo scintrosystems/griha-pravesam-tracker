@@ -90,62 +90,77 @@ export default function PublicView() {
     return (
         <main className="container px-2 px-sm-3 py-2 py-sm-3">
             {/* KPI Cards */}
-            <div className="row g-1.5 g-sm-2 mb-2 mb-sm-3">
+            <div className="row g-2 g-sm-3 mb-3">
                 <div className="col-6 col-md-3">
-                    <div className="custom-card p-2 p-sm-3 h-100">
-                        <div className="d-flex justify-content-between align-items-center text-muted text-uppercase" style={{ fontSize: '10px' }}>
-                            <span className="fw-bold">Ready</span>
-                            <i className="bi bi-calendar-check text-kpi-events"></i>
+                    <div className="kpi-card-refined">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span className="kpi-title">Events Ready</span>
+                            <div className="kpi-icon-circle kpi-icon-events">
+                                <i className="bi bi-calendar-check"></i>
+                            </div>
                         </div>
-                        <h3 className="h5 fw-bold text-kpi-events mb-0 mt-1">{readinessPct}%</h3>
-                        <span className="text-muted d-block text-truncate" style={{ fontSize: '10px' }}>{readyEvents} of {totalEvents}</span>
+                        <div>
+                            <h3 className="kpi-value text-kpi-events">{readinessPct}%</h3>
+                            <p className="kpi-subtext">{readyEvents} of {totalEvents} Ready</p>
+                        </div>
                     </div>
                 </div>
 
                 <div className="col-6 col-md-3">
-                    <div className="custom-card p-2 p-sm-3 h-100">
-                        <div className="d-flex justify-content-between align-items-center text-muted text-uppercase" style={{ fontSize: '10px' }}>
-                            <span className="fw-bold">Logistics</span>
-                            <i className="bi bi-building text-kpi-rooms"></i>
+                    <div className="kpi-card-refined">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span className="kpi-title">Logistics</span>
+                            <div className="kpi-icon-circle kpi-icon-rooms">
+                                <i className="bi bi-building"></i>
+                            </div>
                         </div>
-                        <h3 className="h5 fw-bold text-kpi-rooms mb-0 mt-1">{logisticsCount}</h3>
-                        <span className="text-muted d-block text-truncate" style={{ fontSize: '10px' }}>Active Bookings</span>
+                        <div>
+                            <h3 className="kpi-value text-kpi-rooms">{logisticsCount}</h3>
+                            <p className="kpi-subtext">{items.filter(i => i.tabSlug === 'rooms').length} Rooms, {items.filter(i => i.tabSlug === 'vehicles').length} Vehicles</p>
+                        </div>
                     </div>
                 </div>
 
                 <div className="col-6 col-md-3">
-                    <div className="custom-card p-2 p-sm-3 h-100">
-                        <div className="d-flex justify-content-between align-items-center text-muted text-uppercase" style={{ fontSize: '10px' }}>
-                            <span className="fw-bold">Purchase List</span>
-                            <i className="bi bi-bag-check text-kpi-pooja"></i>
+                    <div className="kpi-card-refined">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span className="kpi-title">Purchase List</span>
+                            <div className="kpi-icon-circle kpi-icon-purchase">
+                                <i className="bi bi-bag-check"></i>
+                            </div>
                         </div>
-                        <h3 className="h5 fw-bold text-kpi-pooja mb-0 mt-1">
-                            {items.filter(i => i.tabSlug === 'purchase' || i.tabSlug === 'shopping').length}
-                        </h3>
-                        <span className="text-muted d-block text-truncate" style={{ fontSize: '10px' }}>{pendingShopping} Pending</span>
+                        <div>
+                            <h3 className="kpi-value text-kpi-pooja">
+                                {items.filter(i => i.tabSlug === 'purchase' || i.tabSlug === 'shopping').length}
+                            </h3>
+                            <p className="kpi-subtext">{pendingShopping} Pending</p>
+                        </div>
                     </div>
                 </div>
 
                 <div className="col-6 col-md-3">
-                    <div className="custom-card p-2 p-sm-3 h-100">
-                        <div className="d-flex justify-content-between align-items-center text-muted text-uppercase" style={{ fontSize: '10px' }}>
-                            <span className="fw-bold">Tasks</span>
-                            <i className="bi bi-check2-square text-kpi-todo"></i>
+                    <div className="kpi-card-refined">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span className="kpi-title">To-Do Tasks</span>
+                            <div className="kpi-icon-circle kpi-icon-todo">
+                                <i className="bi bi-check2-square"></i>
+                            </div>
                         </div>
-                        <h3 className="h5 fw-bold text-kpi-todo mb-0 mt-1">{totalTasks}</h3>
-                        <span className="text-danger d-block text-truncate" style={{ fontSize: '10px' }}>Action Required</span>
+                        <div>
+                            <h3 className="kpi-value text-kpi-todo">{totalTasks}</h3>
+                            <p className="kpi-subtext text-danger">Action Required</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Filter / Search / Time Sort Bar */}
-            <div className="custom-card p-2 p-sm-2.5 mb-2 mb-sm-3">
+            {/* Filter / Search / Time Sort Bar with Uniform Heights */}
+            <div className="filter-bar-card mb-3">
                 <div className="row g-2 align-items-center">
-                    {/* Section Dropdown */}
                     <div className="col-12 col-md-4">
                         <div className="dropdown w-100">
                             <button
-                                className="btn btn-sm btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center fw-bold py-1.5"
+                                className="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center fw-bold filter-control-height"
                                 type="button"
                                 data-bs-toggle="dropdown"
                             >
@@ -177,15 +192,14 @@ export default function PublicView() {
                         </div>
                     </div>
 
-                    {/* Search Bar */}
                     <div className="col-12 col-sm-4 col-md-3">
-                        <div className="input-group input-group-sm w-100">
-                            <span className="input-group-text bg-light border-end-0 py-1">
+                        <div className="input-group w-100">
+                            <span className="input-group-text bg-light border-end-0">
                                 <i className="bi bi-search text-muted"></i>
                             </span>
                             <input
                                 type="text"
-                                className="form-control border-start-0 py-1"
+                                className="form-control border-start-0 filter-control-height"
                                 placeholder="Search..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -193,19 +207,18 @@ export default function PublicView() {
                         </div>
                     </div>
 
-                    {/* Calendar Picker */}
                     <div className="col-7 col-sm-5 col-md-3">
                         <div className="d-flex align-items-center gap-1 w-100">
                             <input
                                 type="date"
-                                className="form-control form-control-sm py-1 flex-grow-1"
+                                className="form-control filter-control-height flex-grow-1"
                                 value={selectedDate}
                                 onChange={(e) => setSelectedDate(e.target.value)}
                             />
                             {selectedDate && (
                                 <button
                                     type="button"
-                                    className="btn btn-sm btn-outline-secondary text-nowrap py-1 px-2"
+                                    className="btn btn-outline-secondary text-nowrap filter-control-height px-2"
                                     onClick={() => setSelectedDate('')}
                                 >
                                     All
@@ -214,11 +227,10 @@ export default function PublicView() {
                         </div>
                     </div>
 
-                    {/* Time Sorting Toggle Button */}
                     <div className="col-5 col-sm-3 col-md-2 text-end">
                         <button
                             type="button"
-                            className={`btn btn-sm w-100 text-nowrap py-1 px-2 ${timeSort !== 'none' ? 'btn-amber fw-bold' : 'btn-outline-secondary'}`}
+                            className={`btn w-100 text-nowrap filter-control-height px-2 ${timeSort !== 'none' ? 'btn-amber fw-bold' : 'btn-outline-secondary'}`}
                             onClick={toggleTimeSort}
                             title="Toggle Chronological Time Sorting"
                         >
