@@ -39,7 +39,7 @@ const MainLayout = () => {
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/griha-pravesam-tracker">
         <MainLayout />
       </Router>
     </AuthProvider>

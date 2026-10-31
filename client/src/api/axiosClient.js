@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.PROD ? '/griha-pravesam-tracker/api' : 'http://localhost:5000/api',
 });
 
 API.interceptors.request.use((config) => {
