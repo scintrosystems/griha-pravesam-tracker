@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import API from '../api/axiosClient';
 
-export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, tabs, lookups, onItemSaved, onOpenLookupModal }) {
+export default function RecordModal({
+    show,
+    onClose,
+    itemToEdit,
+    activeTabSlug,
+    tabs,
+    lookups,
+    allItems = [], // 👈 Access to all existing items to pull contacts from Contact Directory!
+    onItemSaved,
+    onOpenLookupModal
+}) {
     const [tabSlug, setTabSlug] = useState(activeTabSlug || 'schedule');
 
     // Common
@@ -12,18 +22,21 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
     const [locationId, setLocationId] = useState('');
     const [inChargeId, setInChargeId] = useState('');
     const [transportModeId, setTransportModeId] = useState('');
-    const [totalCost, setTotalCost] = useState('');
-    const [paidAmount, setPaidAmount] = useState('');
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState('Confirmed');
+
+    // Financials
+    const [totalCost, setTotalCost] = useState('');
+    const [paidAmount, setPaidAmount] = useState('');
 
     // Food & Catering
     const [hotelDetails, setHotelDetails] = useState('');
     const [mealType, setMealType] = useState('Breakfast');
     const [menuItems, setMenuItems] = useState('');
     const [headcount, setHeadcount] = useState('');
+    const [bookedBy, setBookedBy] = useState('');
 
-    // Rooms (Separate In/Out Dates & Times)
+    // Rooms
     const [roomCount, setRoomCount] = useState('');
     const [headcountPerRoom, setHeadcountPerRoom] = useState('');
     const [roomTariff, setRoomTariff] = useState('');
@@ -32,7 +45,6 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
     const [checkOutDate, setCheckOutDate] = useState('');
     const [checkOutTime, setCheckOutTime] = useState('');
     const [hotelContact, setHotelContact] = useState('');
-    const [bookedBy, setBookedBy] = useState('');
 
     // Vehicles
     const [travelsDetails, setTravelsDetails] = useState('');
@@ -49,12 +61,13 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
     const [category, setCategory] = useState('Poojai');
     const [quantity, setQuantity] = useState('');
     const [specifics, setSpecifics] = useState('');
+    const [purchasedFrom, setPurchasedFrom] = useState('');
 
     // Contacts
     const [phone, setPhone] = useState('');
     const [role, setRole] = useState('');
 
-    // Custom Tab Dynamic Data
+    // Custom Data
     const [customData, setCustomData] = useState({});
 
     useEffect(() => {
@@ -67,15 +80,17 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             setLocationId(itemToEdit.location?._id || itemToEdit.location || '');
             setInChargeId(itemToEdit.inCharge?._id || itemToEdit.inCharge || '');
             setTransportModeId(itemToEdit.transportMode?._id || itemToEdit.transportMode || '');
-            setTotalCost(itemToEdit.totalCost || itemToEdit.amount || '');
-            setPaidAmount(itemToEdit.paidAmount || '');
             setDescription(itemToEdit.description || '');
             setStatus(itemToEdit.status || 'Confirmed');
+
+            setTotalCost(itemToEdit.totalCost || itemToEdit.amount || '');
+            setPaidAmount(itemToEdit.paidAmount || '');
 
             setHotelDetails(itemToEdit.hotelDetails || '');
             setMealType(itemToEdit.mealType || 'Breakfast');
             setMenuItems(itemToEdit.menuItems || '');
             setHeadcount(itemToEdit.headcount || '');
+            setBookedBy(itemToEdit.bookedBy || '');
 
             setRoomCount(itemToEdit.roomCount || '');
             setHeadcountPerRoom(itemToEdit.headcountPerRoom || '');
@@ -85,7 +100,6 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             setCheckOutDate(itemToEdit.checkOutDate || '');
             setCheckOutTime(itemToEdit.checkOutTime || '');
             setHotelContact(itemToEdit.hotelContact || '');
-            setBookedBy(itemToEdit.bookedBy || '');
 
             setTravelsDetails(itemToEdit.travelsDetails || '');
             setVehicleModel(itemToEdit.vehicleModel || '');
@@ -100,6 +114,7 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             setCategory(itemToEdit.category || 'Poojai');
             setQuantity(itemToEdit.quantity || '');
             setSpecifics(itemToEdit.specifics || '');
+            setPurchasedFrom(itemToEdit.purchasedFrom || '');
 
             setPhone(itemToEdit.phone || '');
             setRole(itemToEdit.role || '');
@@ -114,15 +129,17 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             setLocationId('');
             setInChargeId('');
             setTransportModeId('');
-            setTotalCost('');
-            setPaidAmount('');
             setDescription('');
             setStatus('Confirmed');
+
+            setTotalCost('');
+            setPaidAmount('');
 
             setHotelDetails('');
             setMealType('Breakfast');
             setMenuItems('');
             setHeadcount('');
+            setBookedBy('');
 
             setRoomCount('');
             setHeadcountPerRoom('');
@@ -132,7 +149,6 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             setCheckOutDate('');
             setCheckOutTime('');
             setHotelContact('');
-            setBookedBy('');
 
             setTravelsDetails('');
             setVehicleModel('');
@@ -147,6 +163,7 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             setCategory('Poojai');
             setQuantity('');
             setSpecifics('');
+            setPurchasedFrom('');
 
             setPhone('');
             setRole('');
@@ -159,6 +176,19 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
     const currentTab = tabs.find(t => t.slug === tabSlug);
     const isCustomTab = currentTab?.isCustom;
     const isPurchaseTab = tabSlug === 'purchase' || tabSlug === 'shopping';
+
+    // 1. Locations from Master Dropdowns
+    const locations = lookups.filter(l => l.type === 'LOCATION');
+    const transportModes = lookups.filter(l => l.type === 'TRANSPORT_MODE');
+    const masterMenuItems = lookups.filter(l => l.type === 'MENU_ITEM');
+
+    // 2. Contacts fetched directly from the Contact Directory Tab!
+    const directoryContacts = allItems.filter(i => i.tabSlug === 'contacts');
+
+    const handleAppendMenuItem = (dishName) => {
+        if (!dishName) return;
+        setMenuItems(prev => prev ? `${prev}, ${dishName}` : dishName);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -174,11 +204,7 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
 
         const numTotal = Number(String(totalCost).replace(/[^0-9.]/g, '')) || 0;
         const numPaid = Number(String(paidAmount).replace(/[^0-9.]/g, '')) || 0;
-        const paymentStatus = numPaid >= numTotal && numTotal > 0
-            ? 'Paid'
-            : numPaid > 0
-                ? 'Partial'
-                : 'Unpaid';
+        const paymentStatus = numPaid >= numTotal && numTotal > 0 ? 'Paid' : numPaid > 0 ? 'Partial' : 'Unpaid';
 
         const payload = {
             tabSlug,
@@ -190,16 +216,18 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             location: locationId || null,
             inCharge: inChargeId || null,
             transportMode: transportModeId || null,
+            description,
+            status,
+
             totalCost: numTotal,
             paidAmount: numPaid,
             paymentStatus,
-            description,
-            status,
 
             hotelDetails,
             mealType,
             menuItems,
             headcount,
+            bookedBy,
 
             roomCount,
             headcountPerRoom,
@@ -209,7 +237,6 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             checkOutDate,
             checkOutTime,
             hotelContact,
-            bookedBy,
 
             travelsDetails,
             vehicleModel,
@@ -220,10 +247,11 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
             pickupTime,
             route,
 
-            amount,
+            amount: amount || totalCost,
             category: isPurchaseTab ? category : '',
             quantity,
             specifics,
+            purchasedFrom,
 
             phone,
             role,
@@ -243,15 +271,9 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
         }
     };
 
-    const locations = lookups.filter(l => l.type === 'LOCATION');
-    const persons = lookups.filter(l => l.type === 'PERSON');
-    const transportModes = lookups.filter(l => l.type === 'TRANSPORT_MODE');
-
     return (
         <div className="modal-backdrop-custom">
-            <div className="modal-modern" style={{ maxWidth: '700px' }}>
-
-                {/* Header */}
+            <div className="modal-modern" style={{ maxWidth: '720px' }}>
                 <div className="modal-header-modern">
                     <div className="d-flex align-items-center gap-2">
                         <div className="header-icon">
@@ -267,7 +289,6 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                     <button type="button" className="btn-close" onClick={onClose}></button>
                 </div>
 
-                {/* Form Body */}
                 <form onSubmit={handleSubmit} className="d-flex flex-column flex-grow-1 overflow-hidden">
                     <div className="p-3 overflow-y-auto flex-grow-1" style={{ maxHeight: '72vh' }}>
 
@@ -327,15 +348,17 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                         </div>
                                     </div>
 
+                                    {/* In-Charge Person from Contact Directory */}
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-person"></i> In-Charge Person</label>
-                                        <div className="modal-input-group">
-                                            <select className="modal-select" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
-                                                <option value="">— Select Person —</option>
-                                                {persons.map(p => (<option key={p._id} value={p._id}>{p.name} {p.phone ? `(${p.phone})` : ''}</option>))}
-                                            </select>
-                                            <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
-                                        </div>
+                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                            <option value="">— Select from Contacts —</option>
+                                            {directoryContacts.map(c => (
+                                                <option key={c._id} value={c._id}>
+                                                    {c.title} {c.phone ? `(${c.phone})` : ''}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             </>
@@ -370,7 +393,7 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                 </div>
 
                                 <div className="row g-2 mb-2.5">
-                                    <div className="col-12 col-sm-6">
+                                    <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-geo-alt"></i> Dining Location</label>
                                         <div className="modal-input-group">
                                             <select className="modal-select" value={locationId} onChange={(e) => setLocationId(e.target.value)}>
@@ -380,36 +403,88 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                             <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
                                         </div>
                                     </div>
-                                    <div className="col-12 col-sm-6">
+                                    <div className="col-6 col-sm-4">
                                         <label className="modal-label">Headcount</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. 60 Members" value={headcount} onChange={(e) => setHeadcount(e.target.value)} />
                                     </div>
+                                    {/* Booked By from Contact Directory */}
+                                    <div className="col-6 col-sm-4">
+                                        <label className="modal-label"><i className="bi bi-person-check"></i> Booked By</label>
+                                        <select className="modal-select w-100" value={bookedBy} onChange={(e) => setBookedBy(e.target.value)}>
+                                            <option value="">— Select Contact —</option>
+                                            {directoryContacts.map(c => (
+                                                <option key={c._id} value={c.title}>
+                                                    {c.title} {c.phone ? `(${c.phone})` : ''}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div className="mb-2.5">
-                                    <label className="modal-label">Menu Items (Textarea)</label>
-                                    <textarea rows="2" className="modal-input w-100" placeholder="e.g. Idiyappam, Idli, Pongal, Hot Filter Coffee" value={menuItems} onChange={(e) => setMenuItems(e.target.value)}></textarea>
+                                    <div className="d-flex justify-content-between align-items-center mb-1">
+                                        <label className="modal-label mb-0"><i className="bi bi-egg-fried"></i> Menu Items</label>
+                                        <div className="d-flex align-items-center gap-1">
+                                            <span className="small text-muted" style={{ fontSize: '11px' }}>Quick Pick:</span>
+                                            <select
+                                                className="modal-select py-0 px-1"
+                                                style={{ fontSize: '11px', height: '24px' }}
+                                                onChange={(e) => {
+                                                    handleAppendMenuItem(e.target.value);
+                                                    e.target.value = '';
+                                                }}
+                                            >
+                                                <option value="">+ Add Dish</option>
+                                                {masterMenuItems.map(m => (
+                                                    <option key={m._id} value={m.name}>{m.name}</option>
+                                                ))}
+                                            </select>
+                                            <button type="button" className="btn btn-sm btn-link text-amber p-0" title="Manage Dishes" onClick={onOpenLookupModal}>
+                                                <i className="bi bi-gear"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <textarea
+                                        rows="2"
+                                        className="modal-input w-100"
+                                        placeholder="e.g. Idiyappam, Idli, Pongal, Coffee"
+                                        value={menuItems}
+                                        onChange={(e) => setMenuItems(e.target.value)}
+                                    ></textarea>
                                 </div>
 
+                                {/* Catering Contact Person from Directory */}
                                 <div className="mb-2.5">
                                     <label className="modal-label"><i className="bi bi-person"></i> Catering Contact Person</label>
-                                    <div className="modal-input-group">
-                                        <select className="modal-select" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
-                                            <option value="">— Select Person —</option>
-                                            {persons.map(p => (<option key={p._id} value={p._id}>{p.name} {p.phone ? `(${p.phone})` : ''}</option>))}
-                                        </select>
-                                        <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
-                                    </div>
+                                    <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                        <option value="">— Select Contact —</option>
+                                        {directoryContacts.map(c => (
+                                            <option key={c._id} value={c._id}>
+                                                {c.title} {c.phone ? `(${c.phone})` : ''}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                             </>
                         )}
 
-                        {/* 3. ROOMS & LODGING (Separate In/Out Dates & Times + In-Charge + Booked By) */}
+                        {/* 3. ROOMS & LODGING */}
                         {tabSlug === 'rooms' && (
                             <>
                                 <div className="mb-2.5">
                                     <label className="modal-label">Hotel Name with Address & Contact *</label>
                                     <input type="text" className="modal-input w-100" placeholder="e.g. Sri Kaliswari Le Archids, Sivakasi" value={hotelDetails} onChange={(e) => setHotelDetails(e.target.value)} required />
+                                </div>
+
+                                <div className="mb-2.5">
+                                    <label className="modal-label"><i className="bi bi-geo-alt"></i> Location (Google Maps)</label>
+                                    <div className="modal-input-group">
+                                        <select className="modal-select" value={locationId} onChange={(e) => setLocationId(e.target.value)}>
+                                            <option value="">— Select Location —</option>
+                                            {locations.map(loc => (<option key={loc._id} value={loc._id}>{loc.name}</option>))}
+                                        </select>
+                                        <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
+                                    </div>
                                 </div>
 
                                 <div className="row g-2 mb-2.5">
@@ -427,7 +502,6 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                     </div>
                                 </div>
 
-                                {/* Separate Check-in Date & Time */}
                                 <div className="row g-2 mb-2.5 p-2 bg-light rounded border">
                                     <div className="col-6">
                                         <label className="modal-label"><i className="bi bi-calendar-check"></i> Check-in Date</label>
@@ -439,7 +513,6 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                     </div>
                                 </div>
 
-                                {/* Separate Check-out Date & Time */}
                                 <div className="row g-2 mb-2.5 p-2 bg-light rounded border">
                                     <div className="col-6">
                                         <label className="modal-label"><i className="bi bi-calendar-x"></i> Check-out Date</label>
@@ -452,26 +525,36 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                 </div>
 
                                 <div className="row g-2 mb-2.5">
+                                    {/* In-Charge from Contact Directory */}
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-person"></i> In-Charge / Contact Person</label>
-                                        <div className="modal-input-group">
-                                            <select className="modal-select" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
-                                                <option value="">— Select Person —</option>
-                                                {persons.map(p => (<option key={p._id} value={p._id}>{p.name} {p.phone ? `(${p.phone})` : ''}</option>))}
-                                            </select>
-                                            <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
-                                        </div>
+                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                            <option value="">— Select Contact —</option>
+                                            {directoryContacts.map(c => (
+                                                <option key={c._id} value={c._id}>
+                                                    {c.title} {c.phone ? `(${c.phone})` : ''}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
 
+                                    {/* Booked By from Contact Directory */}
                                     <div className="col-12 col-sm-6">
-                                        <label className="modal-label">Booked By</label>
-                                        <input type="text" className="modal-input w-100" placeholder="e.g. Arunkumar" value={bookedBy} onChange={(e) => setBookedBy(e.target.value)} />
+                                        <label className="modal-label"><i className="bi bi-person-check"></i> Booked By</label>
+                                        <select className="modal-select w-100" value={bookedBy} onChange={(e) => setBookedBy(e.target.value)}>
+                                            <option value="">— Select Contact —</option>
+                                            {directoryContacts.map(c => (
+                                                <option key={c._id} value={c.title}>
+                                                    {c.title} {c.phone ? `(${c.phone})` : ''}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             </>
                         )}
 
-                        {/* 4. VEHICLES */}
+                        {/* 4. VEHICLES & TAXIS (Driver Dropdown from Contacts) */}
                         {tabSlug === 'vehicles' && (
                             <>
                                 <div className="row g-2 mb-2.5">
@@ -486,10 +569,23 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                 </div>
 
                                 <div className="row g-2 mb-2.5">
+                                    {/* Driver Dropdown from Contact Directory */}
                                     <div className="col-12 col-sm-4">
-                                        <label className="modal-label">Driver Number</label>
-                                        <input type="tel" className="modal-input w-100" placeholder="e.g. 93601 88819" value={driverNumber} onChange={(e) => setDriverNumber(e.target.value)} />
+                                        <label className="modal-label"><i className="bi bi-person-badge"></i> Driver (from Contacts)</label>
+                                        <select
+                                            className="modal-select w-100"
+                                            value={driverNumber}
+                                            onChange={(e) => setDriverNumber(e.target.value)}
+                                        >
+                                            <option value="">— Select Driver —</option>
+                                            {directoryContacts.map(c => (
+                                                <option key={c._id} value={c.phone || c.title}>
+                                                    {c.title} {c.phone ? `(${c.phone})` : ''}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
+
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-geo-alt"></i> Pickup Location</label>
                                         <div className="modal-input-group">
@@ -500,6 +596,7 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                             <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
                                         </div>
                                     </div>
+
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-calendar3"></i> Booking Date</label>
                                         <input type="date" className="modal-input w-100" value={date} onChange={(e) => setDate(e.target.value)} />
@@ -534,52 +631,73 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                             </>
                         )}
 
-                        {/* 5. PURCHASE LIST (Handles both 'purchase' and 'shopping') */}
+                        {/* 5. PURCHASE LIST */}
                         {isPurchaseTab && (
                             <>
                                 <div className="row g-2 mb-2.5">
-                                    <div className="col-12 col-sm-7">
-                                        <label className="modal-label">Item Name *</label>
-                                        <input type="text" className="modal-input w-100" placeholder="e.g. Uppu Packet, Kuthu Vilakku, Fruits" value={title} onChange={(e) => setTitle(e.target.value)} required />
-                                    </div>
-                                    <div className="col-12 col-sm-5">
-                                        <label className="modal-label">Category *</label>
-                                        <select className="modal-select w-100" value={category} onChange={(e) => setCategory(e.target.value)}>
-                                            <option value="Poojai">Poojai</option>
-                                            <option value="General">General</option>
+                                    <div className="col-12 col-sm-6">
+                                        <label className="modal-label">Parent Category *</label>
+                                        <select
+                                            className="modal-select w-100 fw-bold"
+                                            value={category}
+                                            onChange={(e) => setCategory(e.target.value)}
+                                        >
+                                            <option value="Poojai">🪔 Poojai Items</option>
+                                            <option value="General">🛍️ General Provisions & Gifts</option>
                                         </select>
+                                    </div>
+                                    <div className="col-12 col-sm-6">
+                                        <label className="modal-label">Item / Checklist Name *</label>
+                                        <input
+                                            type="text"
+                                            className="modal-input w-100"
+                                            placeholder="e.g. Salt (Uppu), Vilakku Thiri, Return Bags"
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            required
+                                        />
                                     </div>
                                 </div>
 
                                 <div className="row g-2 mb-2.5">
-                                    <div className="col-4">
-                                        <label className="modal-label">Amount (₹)</label>
-                                        <input type="text" className="modal-input w-100" placeholder="e.g. ₹500" value={amount} onChange={(e) => setAmount(e.target.value)} />
-                                    </div>
-                                    <div className="col-4">
+                                    <div className="col-6">
                                         <label className="modal-label">Quantity</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. 2 Pkts / 100ml" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                                     </div>
-                                    <div className="col-4">
+                                    <div className="col-6">
                                         <label className="modal-label">Specifics</label>
-                                        <input type="text" className="modal-input w-100" placeholder="e.g. Big Size / Pure" value={specifics} onChange={(e) => setSpecifics(e.target.value)} />
+                                        <input type="text" className="modal-input w-100" placeholder="e.g. Big Size / Pure Cotton" value={specifics} onChange={(e) => setSpecifics(e.target.value)} />
                                     </div>
                                 </div>
 
-                                <div className="mb-2.5">
-                                    <label className="modal-label"><i className="bi bi-person"></i> Assigned Person</label>
-                                    <div className="modal-input-group">
-                                        <select className="modal-select" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
-                                            <option value="">— Select Person —</option>
-                                            {persons.map(p => (<option key={p._id} value={p._id}>{p.name} {p.phone ? `(${p.phone})` : ''}</option>))}
+                                <div className="row g-2 mb-2.5">
+                                    <div className="col-12 col-sm-6">
+                                        <label className="modal-label"><i className="bi bi-shop"></i> Purchased From (Shop / Source)</label>
+                                        <input
+                                            type="text"
+                                            className="modal-input w-100"
+                                            placeholder="e.g. Local Market, Supermarket"
+                                            value={purchasedFrom}
+                                            onChange={(e) => setPurchasedFrom(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className="col-12 col-sm-6">
+                                        <label className="modal-label"><i className="bi bi-person"></i> Assigned Person</label>
+                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                            <option value="">— Select Contact —</option>
+                                            {directoryContacts.map(c => (
+                                                <option key={c._id} value={c._id}>
+                                                    {c.title} {c.phone ? `(${c.phone})` : ''}
+                                                </option>
+                                            ))}
                                         </select>
-                                        <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
                                     </div>
                                 </div>
                             </>
                         )}
 
-                        {/* 6. TO-DO TASKS (Added Location Dropdown) */}
+                        {/* 6. TO-DO TASKS */}
                         {tabSlug === 'todo' && (
                             <>
                                 <div className="mb-2.5">
@@ -612,13 +730,14 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
 
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-person"></i> Assigned Person</label>
-                                        <div className="modal-input-group">
-                                            <select className="modal-select" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
-                                                <option value="">— Select Person —</option>
-                                                {persons.map(p => (<option key={p._id} value={p._id}>{p.name} {p.phone ? `(${p.phone})` : ''}</option>))}
-                                            </select>
-                                            <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
-                                        </div>
+                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                            <option value="">— Select Contact —</option>
+                                            {directoryContacts.map(c => (
+                                                <option key={c._id} value={c._id}>
+                                                    {c.title} {c.phone ? `(${c.phone})` : ''}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             </>
@@ -705,13 +824,14 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                                         return (
                                             <div key={field.key} className="mb-2.5">
                                                 <label className="modal-label"><i className="bi bi-person"></i> In-Charge / Person</label>
-                                                <div className="modal-input-group">
-                                                    <select className="modal-select" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
-                                                        <option value="">— Select Person —</option>
-                                                        {persons.map(p => (<option key={p._id} value={p._id}>{p.name} {p.phone ? `(${p.phone})` : ''}</option>))}
-                                                    </select>
-                                                    <button type="button" className="btn-addon-add" onClick={onOpenLookupModal}><i className="bi bi-plus-lg"></i></button>
-                                                </div>
+                                                <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                                    <option value="">— Select Contact —</option>
+                                                    {directoryContacts.map(c => (
+                                                        <option key={c._id} value={c._id}>
+                                                            {c.title} {c.phone ? `(${c.phone})` : ''}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                         );
                                     }
@@ -731,40 +851,42 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                             </>
                         )}
 
-                        {/* Universal Expenses Section */}
-                        <div className="p-2.5 mb-2.5 rounded-3 border bg-light">
-                            <span className="modal-label mb-1.5"><i className="bi bi-currency-rupee"></i> Expenses & Payment:</span>
-                            <div className="row g-2 align-items-center">
-                                <div className="col-12 col-sm-4">
-                                    <label className="text-muted small d-block mb-1">Total Bill / Cost (₹)</label>
-                                    <input
-                                        type="number"
-                                        className="modal-input w-100"
-                                        placeholder="e.g. 5000"
-                                        value={totalCost}
-                                        onChange={(e) => setTotalCost(e.target.value)}
-                                    />
-                                </div>
+                        {/* EXPENSES (Hidden on Contacts AND Purchase Items) */}
+                        {tabSlug !== 'contacts' && tabSlug !== 'purchase' && tabSlug !== 'shopping' && (
+                            <div className="p-2.5 mb-2.5 rounded-3 border bg-light">
+                                <span className="modal-label mb-1.5"><i className="bi bi-currency-rupee"></i> Expenses & Payment:</span>
+                                <div className="row g-2 align-items-center">
+                                    <div className="col-12 col-sm-4">
+                                        <label className="text-muted small d-block mb-1">Total Bill / Cost (₹)</label>
+                                        <input
+                                            type="number"
+                                            className="modal-input w-100"
+                                            placeholder="e.g. 5000"
+                                            value={totalCost}
+                                            onChange={(e) => setTotalCost(e.target.value)}
+                                        />
+                                    </div>
 
-                                <div className="col-12 col-sm-4">
-                                    <label className="text-muted small d-block mb-1">Paid / Advance (₹)</label>
-                                    <input
-                                        type="number"
-                                        className="modal-input w-100"
-                                        placeholder="e.g. 2000"
-                                        value={paidAmount}
-                                        onChange={(e) => setPaidAmount(e.target.value)}
-                                    />
-                                </div>
+                                    <div className="col-12 col-sm-4">
+                                        <label className="text-muted small d-block mb-1">Paid / Advance (₹)</label>
+                                        <input
+                                            type="number"
+                                            className="modal-input w-100"
+                                            placeholder="e.g. 2000"
+                                            value={paidAmount}
+                                            onChange={(e) => setPaidAmount(e.target.value)}
+                                        />
+                                    </div>
 
-                                <div className="col-12 col-sm-4">
-                                    <label className="text-muted small d-block mb-1">Balance Due</label>
-                                    <div className="balance-display-box">
-                                        ₹{Math.max(0, (Number(totalCost) || 0) - (Number(paidAmount) || 0)).toLocaleString('en-IN')}
+                                    <div className="col-12 col-sm-4">
+                                        <label className="text-muted small d-block mb-1">Balance Due</label>
+                                        <div className="balance-display-box">
+                                            ₹{Math.max(0, (Number(totalCost) || 0) - (Number(paidAmount) || 0)).toLocaleString('en-IN')}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Description */}
                         <div className="mb-2.5">
@@ -772,7 +894,7 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                             <textarea rows="2" className="modal-input w-100" placeholder="Detailed instructions, specifics, or notes..." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
                         </div>
 
-                        {/* Status */}
+                        {/* Status (Hidden on Contacts) */}
                         {tabSlug !== 'contacts' && (
                             <div>
                                 <label className="modal-label"><i className="bi bi-check-circle"></i> Status</label>
@@ -787,7 +909,6 @@ export default function RecordModal({ show, onClose, itemToEdit, activeTabSlug, 
                         )}
                     </div>
 
-                    {/* Footer */}
                     <div className="modal-footer-modern">
                         <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
                         <button type="submit" className="btn-submit">

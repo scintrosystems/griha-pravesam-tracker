@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../api/axiosClient';
+import './AdminDashboard.css';
 import TableView from '../components/TableView';
 import DayMasterView from '../components/DayMasterView';
 import RecordModal from '../components/RecordModal';
 import NewTabModal from '../components/NewTabModal';
 import LookupModal from '../components/LookupModal';
-import { sortItemsByTime } from '../utils/timeSort';
 import ExpenseOverview from '../components/ExpenseOverview';
-import './AdminDashboard.css';
+import { sortItemsByTime } from '../utils/timeSort';
 
 export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
     const [tabs, setTabs] = useState([]);
@@ -20,6 +20,13 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
     const [timeSort, setTimeSort] = useState('none');
     const [loading, setLoading] = useState(true);
 
+    // Privacy toggles state
+    const [settings, setSettings] = useState({
+        showOverallExpensesToPublic: false,
+        showSectionExpensesToPublic: false
+    });
+
+    // Modals state
     const [showRecordModal, setShowRecordModal] = useState(false);
     const [itemToEdit, setItemToEdit] = useState(null);
     const [showNewTabModal, setShowNewTabModal] = useState(false);
@@ -28,19 +35,24 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [tabsRes, itemsRes, lookupsRes] = await Promise.all([
+            const [tabsRes, itemsRes, lookupsRes, settingsRes] = await Promise.all([
                 API.get('/tabs').catch(() => ({ data: [] })),
                 API.get('/items').catch(() => ({ data: [] })),
-                API.get('/lookups').catch(() => ({ data: [] }))
+                API.get('/lookups').catch(() => ({ data: [] })),
+                API.get('/settings').catch(() => ({ data: {} }))
             ]);
 
             setTabs(Array.isArray(tabsRes.data) ? tabsRes.data : []);
             setItems(Array.isArray(itemsRes.data) ? itemsRes.data : []);
             setLookups(Array.isArray(lookupsRes.data) ? lookupsRes.data : []);
+            if (settingsRes.data && typeof settingsRes.data === 'object') {
+                setSettings({
+                    showOverallExpensesToPublic: !!settingsRes.data.showOverallExpensesToPublic,
+                    showSectionExpensesToPublic: !!settingsRes.data.showSectionExpensesToPublic
+                });
+            }
         } catch (err) {
             console.error('Failed to load data', err);
-            setItems([]);
-            setTabs([]);
         } finally {
             setLoading(false);
         }
@@ -49,6 +61,16 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleToggleSetting = async (key) => {
+        try {
+            const nextSettings = { ...settings, [key]: !settings[key] };
+            await API.put('/settings', nextSettings);
+            setSettings(nextSettings);
+        } catch (err) {
+            alert('Failed to update public privacy setting');
+        }
+    };
 
     const toggleTimeSort = () => {
         if (timeSort === 'none') setTimeSort('asc');
@@ -100,7 +122,8 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                 i.title?.toLowerCase().includes(q) ||
                 i.description?.toLowerCase().includes(q) ||
                 i.location?.name?.toLowerCase().includes(q) ||
-                i.inCharge?.name?.toLowerCase().includes(q)
+                i.inCharge?.name?.toLowerCase().includes(q) ||
+                i.bookedBy?.toLowerCase().includes(q)
             )
         );
     }
@@ -109,7 +132,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
 
     const tabSpecificItems = activeTab === 'dayview'
         ? filteredItems
-        : filteredItems.filter(i => i.tabSlug === activeTab);
+        : filteredItems.filter(i => i && i.tabSlug === activeTab);
 
     const selectTab = (slug) => {
         setActiveTab(slug);
@@ -118,7 +141,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
 
     return (
         <div className="d-flex position-relative">
-            {/* Mobile Backdrop */}
+            {/* Mobile Drawer Overlay */}
             {sidebarOpen && (
                 <div
                     className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-lg-none"
@@ -127,13 +150,12 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                 />
             )}
 
-            {/* Sidebar */}
+            {/* FIXED SIDEBAR - NO SQUEEZE */}
             <aside
                 className={`admin-sidebar p-3 shadow-sm ${sidebarOpen ? 'd-flex position-fixed top-0 start-0 h-100' : 'd-none d-lg-flex'}`}
                 style={{ zIndex: 1045 }}
             >
-                {/* Header: Admin */}
-                <div className="d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom">
+                <div className="d-flex align-items-center justify-content-between pb-2 mb-2 border-bottom">
                     <div className="d-flex align-items-center gap-2">
                         <i className="bi bi-shield-check text-amber fs-5"></i>
                         <span className="fw-bold small text-dark">Admin</span>
@@ -141,7 +163,6 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                     <button type="button" className="btn-close d-lg-none" onClick={onCloseSidebar}></button>
                 </div>
 
-                {/* Vertical Nav List */}
                 <ul className="nav nav-pills flex-column gap-1 mb-auto flex-nowrap w-100">
                     <li className="nav-item w-100">
                         <button
@@ -207,23 +228,21 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
             </aside>
 
             {/* Main Admin Content Body */}
-            <main className="flex-grow-1 p-2 p-sm-3" style={{ minWidth: 0 }}>
+            <main className="flex-grow-1 p-2 p-sm-3" style={{ minWidth: 0, overflowX: 'hidden' }}>
                 {/* Title & Navigation Toolbar */}
-                <div className="d-flex justify-content-between align-items-center gap-1.5 mb-2 flex-wrap">
+                <div className="d-flex justify-content-between align-items-center gap-1.5 mb-2.5 flex-wrap">
                     <h2 className="h6 fw-bold mb-0 text-truncate text-dark">
                         {activeTab === 'dayview' ? 'Day-by-Day Master' : tabs.find(t => t.slug === activeTab)?.label}
                     </h2>
 
                     <div className="d-flex align-items-center gap-1.5">
-                        {/* Quick Public View Link on Toolbar */}
-                        <Link to="/" className="btn btn-sm btn-outline-secondary fw-semibold py-1 px-2">
-                            <i className="bi bi-eye me-1 text-amber"></i>
-                            <span className="d-none d-sm-inline">Public View</span>
+                        <Link to="/" className="btn btn-sm btn-outline-secondary fw-semibold py-1 px-2.5">
+                            <i className="bi bi-eye me-1 text-amber"></i> Public View
                         </Link>
 
                         <button
                             type="button"
-                            className="btn btn-sm btn-amber fw-bold text-nowrap shadow-sm py-1 px-2.5"
+                            className="btn btn-sm btn-amber fw-bold text-nowrap shadow-sm py-1 px-3"
                             onClick={() => {
                                 setItemToEdit(null);
                                 setShowRecordModal(true);
@@ -235,8 +254,8 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                 </div>
 
                 {/* Filter Bar */}
-                <div className="filter-bar-card mb-3">
-                    <div className="row g-2 align-items-center">
+                <div className="filter-bar-card mb-2.5">
+                    <div className="row g-1.5 align-items-center">
                         <div className="col-12 col-md-5">
                             <input
                                 type="text"
@@ -257,7 +276,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                             {selectedDate && (
                                 <button
                                     type="button"
-                                    className="btn btn-outline-secondary text-nowrap filter-control-height px-2.5"
+                                    className="btn btn-outline-secondary text-nowrap filter-control-height px-2"
                                     onClick={() => setSelectedDate('')}
                                 >
                                     All
@@ -279,6 +298,52 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                     </div>
                 </div>
 
+                {/* Public Privacy Toggle Card */}
+                <div className="privacy-toggle-card mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2 shadow-xs">
+                    <div className="d-flex align-items-center gap-2">
+                        <i className="bi bi-eye-slash-fill text-secondary fs-5"></i>
+                        <div>
+                            <span className="fw-bold small text-dark d-block">Public View Financial Privacy</span>
+                            <span className="text-muted" style={{ fontSize: '11px' }}>
+                                Toggle which financial blocks visitors can see on the public site
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="d-flex align-items-center gap-3">
+                        <div className="form-check form-switch small mb-0">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                id="toggleOverall"
+                                checked={settings.showOverallExpensesToPublic}
+                                onChange={() => handleToggleSetting('showOverallExpensesToPublic')}
+                                style={{ cursor: 'pointer' }}
+                            />
+                            <label className="form-check-label fw-semibold text-dark" htmlFor="toggleOverall" style={{ cursor: 'pointer' }}>
+                                Show Overall Budget
+                            </label>
+                        </div>
+
+                        <div className="form-check form-switch small mb-0">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                id="toggleSection"
+                                checked={settings.showSectionExpensesToPublic}
+                                onChange={() => handleToggleSetting('showSectionExpensesToPublic')}
+                                style={{ cursor: 'pointer' }}
+                            />
+                            <label className="form-check-label fw-semibold text-dark" htmlFor="toggleSection" style={{ cursor: 'pointer' }}>
+                                Show Section Financials
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Overall Expenses Overview */}
                 <ExpenseOverview items={items} tabs={tabs} />
 
                 {/* Dynamic Display */}
@@ -301,6 +366,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                         activeTabSlug={activeTab}
                         tabs={tabs}
                         isAdmin={true}
+                        showSectionExpenses={true}
                         onEdit={(item) => {
                             setItemToEdit(item);
                             setShowRecordModal(true);
@@ -320,6 +386,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                 activeTabSlug={activeTab}
                 tabs={tabs}
                 lookups={lookups}
+                allItems={items}
                 onItemSaved={fetchData}
                 onOpenLookupModal={() => setShowLookupModal(true)}
             />

@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Tab = require('../models/Tab');
 const Item = require('../models/Item');
-const auth = require('../middleware/auth'); // Auth middleware
+const auth = require('../middleware/auth');
 
-// Default tabs list (Purchase List replaces Pooja List)
+// Default core tabs
 const DEFAULT_TABS = [
     { slug: 'schedule', label: 'Event Agenda', icon: 'bi-calendar-event', order: 1, isCustom: false },
     { slug: 'food', label: 'Food & Catering', icon: 'bi-egg-fried', order: 2, isCustom: false },
@@ -15,20 +15,9 @@ const DEFAULT_TABS = [
     { slug: 'contacts', label: 'Contact Directory', icon: 'bi-person-lines-fill', order: 7, isCustom: false }
 ];
 
-// GET all tabs (Public - No auth required so guests can view tabs)
+// GET all tabs
 router.get('/', async (req, res) => {
     try {
-        // 1. Force rename in MongoDB if old "Pooja List" / "shopping" exists
-        await Tab.updateMany(
-            { $or: [{ slug: 'shopping' }, { slug: 'pooja' }, { label: /pooja/i }] },
-            { $set: { slug: 'purchase', label: 'Purchase List', icon: 'bi-bag-check' } }
-        );
-        await Item.updateMany(
-            { $or: [{ tabSlug: 'shopping' }, { tabSlug: 'pooja' }] },
-            { $set: { tabSlug: 'purchase' } }
-        );
-
-        // 2. Fetch tabs
         let tabs = await Tab.find().sort({ order: 1 });
         if (tabs.length === 0) {
             tabs = await Tab.insertMany(DEFAULT_TABS);
@@ -39,7 +28,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST new custom tab (Protected: Requires Admin Auth)
+// POST new custom tab
 router.post('/', auth, async (req, res) => {
     try {
         const { label, icon, customFields } = req.body;
@@ -64,7 +53,7 @@ router.post('/', auth, async (req, res) => {
     }
 });
 
-// DELETE a custom tab (Protected: Requires Admin Auth)
+// DELETE a custom tab
 router.delete('/:slug', auth, async (req, res) => {
     try {
         const { slug } = req.params;

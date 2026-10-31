@@ -19,6 +19,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/tabs', require('./routes/tabRoutes'));
 app.use('/api/items', require('./routes/itemRoutes'));
 app.use('/api/lookups', require('./routes/lookupRoutes'));
+app.use('/api/settings', require('./routes/settingRoutes'));
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'Griha Pravesam API running' });

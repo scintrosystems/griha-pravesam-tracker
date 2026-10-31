@@ -4,7 +4,7 @@ const lookupSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true,
-        enum: ['LOCATION', 'PERSON', 'TRANSPORT_MODE', 'CATEGORY']
+        enum: ['LOCATION', 'PERSON', 'TRANSPORT_MODE', 'CATEGORY', 'MENU_ITEM']
     },
     name: {
         type: String,

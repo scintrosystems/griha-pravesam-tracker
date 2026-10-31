@@ -1,9 +1,10 @@
-/* Strict Vertical-Only Sidebar Drawer */
 .admin-sidebar {
-    width: 270px;
-    max-width: 82vw;
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    flex-shrink: 0 !important;
     background-color: #ffffff;
-    border-right: 1px solid var(--card-border);
+    border-right: 1px solid var(--card-border, #e2e8f0);
     overflow-y: auto !important;
     overflow-x: hidden !important;
     display: flex;
@@ -30,4 +31,12 @@
         position: sticky;
         top: 54px;
     }
+}
+
+/* Privacy Toggle Card */
+.privacy-toggle-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 0.65rem;
+    padding: 0.75rem 1rem;
 }

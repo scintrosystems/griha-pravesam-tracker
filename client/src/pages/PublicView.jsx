@@ -8,31 +8,39 @@ import ExpenseOverview from '../components/ExpenseOverview';
 export default function PublicView() {
     const [tabs, setTabs] = useState([]);
     const [items, setItems] = useState([]);
-    const [lookups, setLookups] = useState([]); // Added state
     const [activeTab, setActiveTab] = useState('dayview');
     const [selectedDate, setSelectedDate] = useState('');
     const [search, setSearch] = useState('');
     const [timeSort, setTimeSort] = useState('none');
     const [loading, setLoading] = useState(true);
 
+    // Settings from backend
+    const [settings, setSettings] = useState({
+        showOverallExpensesToPublic: false,
+        showSectionExpensesToPublic: false
+    });
+
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [tabsRes, itemsRes, lookupsRes] = await Promise.all([
+            const [tabsRes, itemsRes, settingsRes] = await Promise.all([
                 API.get('/tabs').catch(() => ({ data: [] })),
                 API.get('/items').catch(() => ({ data: [] })),
-                API.get('/lookups').catch(() => ({ data: [] }))
+                API.get('/settings').catch(() => ({ data: {} }))
             ]);
 
-            // Always guarantee arrays
             setTabs(Array.isArray(tabsRes.data) ? tabsRes.data : []);
             setItems(Array.isArray(itemsRes.data) ? itemsRes.data : []);
-            setLookups(Array.isArray(lookupsRes.data) ? lookupsRes.data : []);
+            if (settingsRes.data && typeof settingsRes.data === 'object') {
+                setSettings({
+                    showOverallExpensesToPublic: !!settingsRes.data.showOverallExpensesToPublic,
+                    showSectionExpensesToPublic: !!settingsRes.data.showSectionExpensesToPublic
+                });
+            }
         } catch (err) {
             console.error('Failed to load data', err);
             setItems([]);
             setTabs([]);
-            setLookups([]);
         } finally {
             setLoading(false);
         }
@@ -48,7 +56,6 @@ export default function PublicView() {
         else setTimeSort('none');
     };
 
-    // Safe array fallback
     const safeItems = Array.isArray(items) ? items : [];
 
     let filteredItems = safeItems;
@@ -68,14 +75,12 @@ export default function PublicView() {
         );
     }
 
-    // Apply Chronological Time Sorting
     filteredItems = sortItemsByTime(filteredItems, timeSort);
 
     const tabSpecificItems = activeTab === 'dayview'
         ? filteredItems
         : filteredItems.filter(i => i && i.tabSlug === activeTab);
 
-    // Exact KPI Calculations using safeItems
     const readyEvents = safeItems.filter(i => i && i.tabSlug === 'schedule' && (i.status === 'Confirmed' || i.status === 'Completed')).length;
     const totalEvents = safeItems.filter(i => i && i.tabSlug === 'schedule').length;
     const readinessPct = totalEvents > 0 ? Math.round((readyEvents / totalEvents) * 100) : 0;
@@ -89,7 +94,7 @@ export default function PublicView() {
 
     return (
         <main className="container px-2 px-sm-3 py-2 py-sm-3">
-            {/* KPI Cards */}
+            {/* 4 KPI Metrics Cards */}
             <div className="row g-2 g-sm-3 mb-3">
                 <div className="col-6 col-md-3">
                     <div className="kpi-card-refined">
@@ -154,7 +159,7 @@ export default function PublicView() {
                 </div>
             </div>
 
-            {/* Filter / Search / Time Sort Bar with Uniform Heights */}
+            {/* Filter / Search Bar */}
             <div className="filter-bar-card mb-3">
                 <div className="row g-2 align-items-center">
                     <div className="col-12 col-md-4">
@@ -241,7 +246,10 @@ export default function PublicView() {
                 </div>
             </div>
 
-            <ExpenseOverview items={items} tabs={tabs} />
+            {/* Conditionally Show Overall Budget to Public if Admin Allowed it */}
+            {settings.showOverallExpensesToPublic && (
+                <ExpenseOverview items={items} tabs={tabs} />
+            )}
 
             {/* Main Content Area */}
             {loading ? (
@@ -262,6 +270,7 @@ export default function PublicView() {
                     activeTabSlug={activeTab}
                     tabs={tabs}
                     isAdmin={false}
+                    showSectionExpenses={settings.showSectionExpensesToPublic}
                     onRefresh={fetchData}
                 />
             )}

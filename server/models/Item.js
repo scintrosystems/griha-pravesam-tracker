@@ -37,6 +37,7 @@ const itemSchema = new mongoose.Schema({
     mealType: { type: String, default: '' },
     menuItems: { type: String, default: '' },
     headcount: { type: String, default: '' },
+    bookedBy: { type: String, default: '' },
 
     // Rooms
     roomCount: { type: String, default: '' },
@@ -64,6 +65,7 @@ const itemSchema = new mongoose.Schema({
     category: { type: String, default: '' },
     quantity: { type: String, default: '' },
     specifics: { type: String, default: '' },
+    purchasedFrom: { type: String, default: '' },
     isPurchased: { type: Boolean, default: false },
 
     // Contacts
