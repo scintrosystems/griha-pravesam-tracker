@@ -1,8 +1,4 @@
-/* ==========================================================================
-   GLOBAL COMMON STYLES (index.css)
-   Contains shared variables, typography, and common utility classes
-   ========================================================================== */
-
+/* Global styles */
 :root {
     --theme-amber: #d97706;
     --theme-amber-dark: #b45309;
@@ -97,11 +93,7 @@ body {
     color: #e11d48 !important;
 }
 
-/* ==========================================================================
-   TARGETED POLISH: KPI Cards, Filter Bars & Addon Buttons
-   ========================================================================== */
-
-/* 1. KPI Cards Polish */
+/* KPI Cards Polish */
 .kpi-card-refined {
     background: #ffffff;
     border: 1px solid var(--card-border, #e2e8f0);
@@ -168,7 +160,7 @@ body {
     margin: 0;
 }
 
-/* 2. Unified Filter Bar Controls (Same 38px height everywhere) */
+/* Unified Filter Bar Controls */
 .filter-bar-card {
     background: #ffffff;
     border: 1px solid var(--card-border, #e2e8f0);
@@ -183,6 +175,56 @@ body {
     border-radius: 0.5rem !important;
 }
 
+/* Horizontal Scrollable Tabs */
+.public-tabs-container {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+}
+
+.public-tabs-container::-webkit-scrollbar {
+    display: none;
+}
+
+.public-tab-btn {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    color: #475569;
+    background: transparent;
+    border: 1px solid transparent;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    flex-shrink: 0;
+}
+
+.public-tab-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.public-tab-btn.active {
+    background: var(--theme-amber, #d97706) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(217, 119, 6, 0.25);
+}
+
+.public-tab-btn.active i {
+    color: #ffffff !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 360px) {
     body {
@@ -192,5 +234,14 @@ body {
     .btn-sm {
         font-size: 0.72rem !important;
         padding: 0.25rem 0.45rem !important;
+    }
+
+    .public-tab-btn {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.75rem;
+    }
+
+    .filter-bar-card {
+        padding: 0.6rem !important;
     }
 }

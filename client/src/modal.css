@@ -1,9 +1,4 @@
-/* ==========================================================================
-   DEDICATED MODAL STYLES (modal.css)
-   Clean, modern, cohesive styling for all dialogs & inputs
-   ========================================================================== */
-
-/* 1. Backdrop with Smooth Blur */
+/* Backdrop with Smooth Blur */
 .modal-backdrop-custom {
     position: fixed;
     inset: 0;
@@ -18,7 +13,7 @@
     overflow-y: auto;
 }
 
-/* 2. Modal Dialog Container */
+/* Modal Dialog Container */
 .modal-modern {
     font-size: 13.5px;
     background: #ffffff;
@@ -45,7 +40,7 @@
     }
 }
 
-/* 3. Modal Header */
+/* Modal Header */
 .modal-header-modern {
     padding: 1rem 1.25rem;
     background: #ffffff;
@@ -75,7 +70,7 @@
     margin: 0;
 }
 
-/* 4. Form Labels */
+/* Form Labels */
 .modal-label {
     font-size: 12.5px !important;
     font-weight: 600;
@@ -91,7 +86,7 @@
     font-size: 0.8rem;
 }
 
-/* 5. Inputs & Selects */
+/* Inputs & Selects */
 .modal-input,
 .modal-select {
     border: 1px solid #cbd5e1;
@@ -115,7 +110,7 @@
     font-size: 0.78rem;
 }
 
-/* 6. Seamless Input Group Addon (+ Button) */
+/* Input Group Addon (+ Button) */
 .modal-input-group {
     display: flex;
     width: 100%;
@@ -152,7 +147,7 @@
     border-color: #cbd5e1 !important;
 }
 
-/* Balance Due Box Height & Alignment Fix */
+/* Balance Due Box */
 .balance-display-box {
     height: 36px;
     background: #ffffff;
@@ -167,7 +162,7 @@
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
-/* 7. Modal Footer */
+/* Modal Footer */
 .modal-footer-modern {
     padding: 0.85rem 1.25rem;
     background: #f8fafc;
@@ -219,7 +214,7 @@
     box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.25) !important;
 }
 
-/* Responsive adjustment for 320px */
+/* Responsive adjustment */
 @media (max-width: 360px) {
     .modal-backdrop-custom {
         padding: 0.4rem;

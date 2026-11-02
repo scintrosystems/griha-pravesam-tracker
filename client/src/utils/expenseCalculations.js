@@ -1,4 +1,3 @@
-// Colors for progress bars
 const SECTION_COLORS = [
     '#d97706', // Amber (Agenda)
     '#059669', // Emerald (Food)

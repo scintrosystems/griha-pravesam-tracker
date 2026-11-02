@@ -1,4 +1,6 @@
 import React from 'react';
+
+// File imports
 import './SectionExpenseBar.css';
 import { calculateSectionExpenses, calculateOverallExpenses, getNumericCost } from '../utils/expenseCalculations';
 
@@ -22,7 +24,7 @@ export default function SectionExpenseBar({ items = [], tabSlug, tabs = [], tabL
       if (item.category === 'General') {
         generalTotal += cost;
       } else {
-        poojaiTotal += cost; // Defaults to Poojai
+        poojaiTotal += cost;
       }
     });
   }
@@ -31,7 +33,7 @@ export default function SectionExpenseBar({ items = [], tabSlug, tabs = [], tabL
   const generalPct = sectionStats.total > 0 ? (100 - poojaiPct) : 0;
 
   return (
-    <div className="section-expense-ribbon mb-2.5 d-flex flex-wrap align-items-center justify-content-between gap-2">
+    <div className="section-expense-ribbon mb-2 d-flex flex-wrap align-items-center justify-content-between gap-2">
       {/* Left Info: Icon & Section Name */}
       <div className="d-flex align-items-center gap-2">
         <div className="section-expense-icon">

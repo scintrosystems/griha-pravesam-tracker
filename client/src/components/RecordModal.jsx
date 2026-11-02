@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+// File imports
 import API from '../api/axiosClient';
 
 export default function RecordModal({
@@ -8,13 +10,13 @@ export default function RecordModal({
     activeTabSlug,
     tabs,
     lookups,
-    allItems = [], // 👈 Access to all existing items to pull contacts from Contact Directory!
+    allItems = [],
     onItemSaved,
     onOpenLookupModal
 }) {
     const [tabSlug, setTabSlug] = useState(activeTabSlug || 'schedule');
 
-    // Common
+    // State
     const [title, setTitle] = useState('');
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [startTime, setStartTime] = useState('');
@@ -177,12 +179,12 @@ export default function RecordModal({
     const isCustomTab = currentTab?.isCustom;
     const isPurchaseTab = tabSlug === 'purchase' || tabSlug === 'shopping';
 
-    // 1. Locations from Master Dropdowns
+    // Locations from Master Dropdowns
     const locations = lookups.filter(l => l.type === 'LOCATION');
     const transportModes = lookups.filter(l => l.type === 'TRANSPORT_MODE');
     const masterMenuItems = lookups.filter(l => l.type === 'MENU_ITEM');
 
-    // 2. Contacts fetched directly from the Contact Directory Tab!
+    // Contacts from Contact Directory
     const directoryContacts = allItems.filter(i => i.tabSlug === 'contacts');
 
     const handleAppendMenuItem = (dishName) => {
@@ -302,15 +304,15 @@ export default function RecordModal({
                             </select>
                         </div>
 
-                        {/* 1. EVENT AGENDA */}
+                        {/* EVENT AGENDA */}
                         {tabSlug === 'schedule' && (
                             <>
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label">Agenda Title *</label>
                                     <input type="text" className="modal-input w-100" placeholder="e.g. Ganapathy Homam, Evening Celebrations" value={title} onChange={(e) => setTitle(e.target.value)} required />
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-calendar3"></i> Date *</label>
                                         <input type="date" className="modal-input w-100" value={date} onChange={(e) => setDate(e.target.value)} required />
@@ -325,7 +327,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-geo-alt"></i> Location</label>
                                         <div className="modal-input-group">
@@ -364,15 +366,15 @@ export default function RecordModal({
                             </>
                         )}
 
-                        {/* 2. FOOD & CATERING */}
+                        {/* FOOD & CATERING */}
                         {tabSlug === 'food' && (
                             <>
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label">Hotel / Caterer Name with Address & Contact *</label>
                                     <input type="text" className="modal-input w-100" placeholder="e.g. Appans Hotel, Sivakasi (Ph: 98401 22334)" value={hotelDetails} onChange={(e) => setHotelDetails(e.target.value)} required />
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-calendar3"></i> Date *</label>
                                         <input type="date" className="modal-input w-100" value={date} onChange={(e) => setDate(e.target.value)} required />
@@ -392,7 +394,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-geo-alt"></i> Dining Location</label>
                                         <div className="modal-input-group">
@@ -407,7 +409,6 @@ export default function RecordModal({
                                         <label className="modal-label">Headcount</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. 60 Members" value={headcount} onChange={(e) => setHeadcount(e.target.value)} />
                                     </div>
-                                    {/* Booked By from Contact Directory */}
                                     <div className="col-6 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-person-check"></i> Booked By</label>
                                         <select className="modal-select w-100" value={bookedBy} onChange={(e) => setBookedBy(e.target.value)}>
@@ -421,7 +422,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <div className="d-flex justify-content-between align-items-center mb-1">
                                         <label className="modal-label mb-0"><i className="bi bi-egg-fried"></i> Menu Items</label>
                                         <div className="d-flex align-items-center gap-1">
@@ -453,8 +454,7 @@ export default function RecordModal({
                                     ></textarea>
                                 </div>
 
-                                {/* Catering Contact Person from Directory */}
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label"><i className="bi bi-person"></i> Catering Contact Person</label>
                                     <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
                                         <option value="">— Select Contact —</option>
@@ -468,15 +468,15 @@ export default function RecordModal({
                             </>
                         )}
 
-                        {/* 3. ROOMS & LODGING */}
+                        {/* ROOMS & LODGING */}
                         {tabSlug === 'rooms' && (
                             <>
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label">Hotel Name with Address & Contact *</label>
                                     <input type="text" className="modal-input w-100" placeholder="e.g. Sri Kaliswari Le Archids, Sivakasi" value={hotelDetails} onChange={(e) => setHotelDetails(e.target.value)} required />
                                 </div>
 
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label"><i className="bi bi-geo-alt"></i> Location (Google Maps)</label>
                                     <div className="modal-input-group">
                                         <select className="modal-select" value={locationId} onChange={(e) => setLocationId(e.target.value)}>
@@ -487,7 +487,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-6 col-sm-4">
                                         <label className="modal-label">Room Count</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. 3 Rooms" value={roomCount} onChange={(e) => setRoomCount(e.target.value)} />
@@ -502,7 +502,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5 p-2 bg-light rounded border">
+                                <div className="row g-2 mb-2 p-2 bg-light rounded border">
                                     <div className="col-6">
                                         <label className="modal-label"><i className="bi bi-calendar-check"></i> Check-in Date</label>
                                         <input type="date" className="modal-input w-100" value={checkInDate} onChange={(e) => setCheckInDate(e.target.value)} />
@@ -513,7 +513,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5 p-2 bg-light rounded border">
+                                <div className="row g-2 mb-2 p-2 bg-light rounded border">
                                     <div className="col-6">
                                         <label className="modal-label"><i className="bi bi-calendar-x"></i> Check-out Date</label>
                                         <input type="date" className="modal-input w-100" value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} />
@@ -524,8 +524,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
-                                    {/* In-Charge from Contact Directory */}
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-person"></i> In-Charge / Contact Person</label>
                                         <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
@@ -538,7 +537,6 @@ export default function RecordModal({
                                         </select>
                                     </div>
 
-                                    {/* Booked By from Contact Directory */}
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-person-check"></i> Booked By</label>
                                         <select className="modal-select w-100" value={bookedBy} onChange={(e) => setBookedBy(e.target.value)}>
@@ -554,10 +552,10 @@ export default function RecordModal({
                             </>
                         )}
 
-                        {/* 4. VEHICLES & TAXIS (Driver Dropdown from Contacts) */}
+                        {/* VEHICLES & TAXIS */}
                         {tabSlug === 'vehicles' && (
                             <>
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label">Travels Name with Address & Contact *</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. Sri Annai Tours, Virudhunagar" value={travelsDetails} onChange={(e) => setTravelsDetails(e.target.value)} required />
@@ -568,8 +566,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
-                                    {/* Driver Dropdown from Contact Directory */}
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-person-badge"></i> Driver (from Contacts)</label>
                                         <select
@@ -603,7 +600,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-4">
                                         <label className="modal-label">Rent / Day</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. ₹7500/day" value={rentPerDay} onChange={(e) => setRentPerDay(e.target.value)} />
@@ -618,7 +615,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-6">
                                         <label className="modal-label"><i className="bi bi-clock"></i> Pickup Time</label>
                                         <input type="time" className="modal-input w-100" value={pickupTime} onChange={(e) => setPickupTime(e.target.value)} />
@@ -631,10 +628,10 @@ export default function RecordModal({
                             </>
                         )}
 
-                        {/* 5. PURCHASE LIST */}
+                        {/* PURCHASE LIST */}
                         {isPurchaseTab && (
                             <>
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label">Parent Category *</label>
                                         <select
@@ -659,7 +656,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-6">
                                         <label className="modal-label">Quantity</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. 2 Pkts / 100ml" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
@@ -670,7 +667,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-shop"></i> Purchased From (Shop / Source)</label>
                                         <input
@@ -697,15 +694,15 @@ export default function RecordModal({
                             </>
                         )}
 
-                        {/* 6. TO-DO TASKS */}
+                        {/* TO-DO TASKS */}
                         {tabSlug === 'todo' && (
                             <>
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label">Task Description *</label>
                                     <input type="text" className="modal-input w-100" placeholder="e.g. Iyer Kalidass Balance Payment envelope ready" value={title} onChange={(e) => setTitle(e.target.value)} required />
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-6">
                                         <label className="modal-label"><i className="bi bi-calendar3"></i> Deadline Date</label>
                                         <input type="date" className="modal-input w-100" value={date} onChange={(e) => setDate(e.target.value)} />
@@ -716,7 +713,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-geo-alt"></i> Location</label>
                                         <div className="modal-input-group">
@@ -743,10 +740,10 @@ export default function RecordModal({
                             </>
                         )}
 
-                        {/* 7. CONTACT DIRECTORY */}
+                        {/* CONTACT DIRECTORY */}
                         {tabSlug === 'contacts' && (
                             <>
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label">Contact Name *</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. Soundararajan K P" value={title} onChange={(e) => setTitle(e.target.value)} required />
@@ -757,7 +754,7 @@ export default function RecordModal({
                                     </div>
                                 </div>
 
-                                <div className="row g-2 mb-2.5">
+                                <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label">Role (Text Input)</label>
                                         <input type="text" className="modal-input w-100" placeholder="e.g. Driver, Iyer, Caterer, Hotel Manager" value={role} onChange={(e) => setRole(e.target.value)} />
@@ -776,17 +773,17 @@ export default function RecordModal({
                             </>
                         )}
 
-                        {/* 8. CUSTOM TABS */}
+                        {/* CUSTOM TABS */}
                         {isCustomTab && (
                             <>
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label">Title / Name *</label>
                                     <input type="text" className="modal-input w-100" placeholder="Item or Activity Name" value={title} onChange={(e) => setTitle(e.target.value)} required />
                                 </div>
                                 {currentTab?.customFields?.map(field => {
                                     if (field.key === 'date') {
                                         return (
-                                            <div key={field.key} className="mb-2.5">
+                                            <div key={field.key} className="mb-2">
                                                 <label className="modal-label"><i className="bi bi-calendar3"></i> {field.label}</label>
                                                 <input type="date" className="modal-input w-100" value={date} onChange={(e) => setDate(e.target.value)} />
                                             </div>
@@ -794,7 +791,7 @@ export default function RecordModal({
                                     }
                                     if (field.key === 'time') {
                                         return (
-                                            <div key={field.key} className="row g-2 mb-2.5">
+                                            <div key={field.key} className="row g-2 mb-2">
                                                 <div className="col-6">
                                                     <label className="modal-label"><i className="bi bi-clock"></i> Start Time</label>
                                                     <input type="time" className="modal-input w-100" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
@@ -808,7 +805,7 @@ export default function RecordModal({
                                     }
                                     if (field.key === 'location') {
                                         return (
-                                            <div key={field.key} className="mb-2.5">
+                                            <div key={field.key} className="mb-2">
                                                 <label className="modal-label"><i className="bi bi-geo-alt"></i> Location</label>
                                                 <div className="modal-input-group">
                                                     <select className="modal-select" value={locationId} onChange={(e) => setLocationId(e.target.value)}>
@@ -822,7 +819,7 @@ export default function RecordModal({
                                     }
                                     if (field.key === 'inCharge') {
                                         return (
-                                            <div key={field.key} className="mb-2.5">
+                                            <div key={field.key} className="mb-2">
                                                 <label className="modal-label"><i className="bi bi-person"></i> In-Charge / Person</label>
                                                 <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
                                                     <option value="">— Select Contact —</option>
@@ -836,7 +833,7 @@ export default function RecordModal({
                                         );
                                     }
                                     return (
-                                        <div key={field.key} className="mb-2.5">
+                                        <div key={field.key} className="mb-2">
                                             <label className="modal-label">{field.label}</label>
                                             <input
                                                 type={field.type || 'text'}
@@ -851,10 +848,10 @@ export default function RecordModal({
                             </>
                         )}
 
-                        {/* EXPENSES (Hidden on Contacts AND Purchase Items) */}
+                        {/* EXPENSES */}
                         {tabSlug !== 'contacts' && tabSlug !== 'purchase' && tabSlug !== 'shopping' && (
-                            <div className="p-2.5 mb-2.5 rounded-3 border bg-light">
-                                <span className="modal-label mb-1.5"><i className="bi bi-currency-rupee"></i> Expenses & Payment:</span>
+                            <div className="p-2 mb-2 rounded-3 border bg-light">
+                                <span className="modal-label mb-1"><i className="bi bi-currency-rupee"></i> Expenses & Payment:</span>
                                 <div className="row g-2 align-items-center">
                                     <div className="col-12 col-sm-4">
                                         <label className="text-muted small d-block mb-1">Total Bill / Cost (₹)</label>
@@ -889,12 +886,12 @@ export default function RecordModal({
                         )}
 
                         {/* Description */}
-                        <div className="mb-2.5">
+                        <div className="mb-2">
                             <label className="modal-label"><i className="bi bi-card-text"></i> Description</label>
                             <textarea rows="2" className="modal-input w-100" placeholder="Detailed instructions, specifics, or notes..." value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
                         </div>
 
-                        {/* Status (Hidden on Contacts) */}
+                        {/* Status */}
                         {tabSlug !== 'contacts' && (
                             <div>
                                 <label className="modal-label"><i className="bi bi-check-circle"></i> Status</label>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import API from '../api/axiosClient';
+
+// File imports
 import './AdminDashboard.css';
+import API from '../api/axiosClient';
 import TableView from '../components/TableView';
 import DayMasterView from '../components/DayMasterView';
 import RecordModal from '../components/RecordModal';
@@ -11,6 +13,7 @@ import ExpenseOverview from '../components/ExpenseOverview';
 import { sortItemsByTime } from '../utils/timeSort';
 
 export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
+    // State
     const [tabs, setTabs] = useState([]);
     const [items, setItems] = useState([]);
     const [lookups, setLookups] = useState([]);
@@ -150,7 +153,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                 />
             )}
 
-            {/* FIXED SIDEBAR - NO SQUEEZE */}
+            {/* Sidebar Drawer */}
             <aside
                 className={`admin-sidebar p-3 shadow-sm ${sidebarOpen ? 'd-flex position-fixed top-0 start-0 h-100' : 'd-none d-lg-flex'}`}
                 style={{ zIndex: 1045 }}
@@ -163,10 +166,11 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                     <button type="button" className="btn-close d-lg-none" onClick={onCloseSidebar}></button>
                 </div>
 
+                {/* Navigation list */}
                 <ul className="nav nav-pills flex-column gap-1 mb-auto flex-nowrap w-100">
                     <li className="nav-item w-100">
                         <button
-                            className={`nav-link w-100 text-start py-1.5 small fw-bold ${activeTab === 'dayview' ? 'btn-amber' : 'text-secondary'}`}
+                            className={`nav-link w-100 text-start py-2 small fw-bold ${activeTab === 'dayview' ? 'btn-amber' : 'text-secondary'}`}
                             onClick={() => selectTab('dayview')}
                         >
                             <i className="bi bi-calendar-check me-2"></i> Day Master View
@@ -180,7 +184,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                     {tabs.map((tab) => (
                         <li key={tab.slug} className="nav-item w-100 d-flex align-items-center justify-content-between">
                             <button
-                                className={`nav-link text-start py-1.5 small fw-semibold text-truncate ${activeTab === tab.slug ? 'btn-amber' : 'text-secondary'}`}
+                                className={`nav-link text-start py-2 small fw-semibold text-truncate ${activeTab === tab.slug ? 'btn-amber' : 'text-secondary'}`}
                                 style={{ flex: 1 }}
                                 onClick={() => selectTab(tab.slug)}
                             >
@@ -198,10 +202,11 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                         </li>
                     ))}
 
+                    {/* Add Custom Tab */}
                     <li className="nav-item mt-2 w-100">
                         <button
                             type="button"
-                            className="btn btn-sm btn-outline-amber w-100 text-start py-1.5 fw-bold"
+                            className="btn btn-sm btn-outline-amber w-100 text-start py-2 fw-bold"
                             onClick={() => {
                                 setShowNewTabModal(true);
                                 if (onCloseSidebar) onCloseSidebar();
@@ -210,19 +215,42 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                             <i className="bi bi-plus-lg me-1"></i> Add Custom Tab
                         </button>
                     </li>
+
+                    {/* Master Dropdowns Button */}
+                    <li className="nav-item mt-1 w-100">
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-outline-secondary w-100 text-start py-2 fw-semibold text-truncate"
+                            onClick={() => {
+                                setShowLookupModal(true);
+                                if (onCloseSidebar) onCloseSidebar();
+                            }}
+                        >
+                            <i className="bi bi-gear-fill me-1"></i> Master Dropdowns
+                        </button>
+                    </li>
                 </ul>
 
-                {/* Master Lookups Button */}
-                <div className="pt-2 border-top mt-2">
+                {/* Mobile-Only Actions */}
+                <div className="d-flex flex-column gap-2 d-sm-none pt-2 border-top mt-2">
+                    <Link
+                        to="/"
+                        className="btn btn-sm btn-outline-secondary w-100 fw-semibold d-flex align-items-center justify-content-center gap-2 py-2"
+                    >
+                        <i className="bi bi-eye text-amber"></i>
+                        <span>View Public Site</span>
+                    </Link>
+
                     <button
                         type="button"
-                        className="btn btn-sm btn-outline-secondary w-100 fw-semibold text-truncate"
+                        className="btn btn-sm btn-outline-danger w-100 fw-semibold d-flex align-items-center justify-content-center gap-2 py-2"
                         onClick={() => {
-                            setShowLookupModal(true);
-                            if (onCloseSidebar) onCloseSidebar();
+                            localStorage.removeItem('griha_admin_token');
+                            window.location.href = '/griha-pravesam-tracker/';
                         }}
                     >
-                        <i className="bi bi-gear-fill me-1"></i> Master Dropdowns
+                        <i className="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
                     </button>
                 </div>
             </aside>
@@ -230,32 +258,38 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
             {/* Main Admin Content Body */}
             <main className="flex-grow-1 p-2 p-sm-3" style={{ minWidth: 0, overflowX: 'hidden' }}>
                 {/* Title & Navigation Toolbar */}
-                <div className="d-flex justify-content-between align-items-center gap-1.5 mb-2.5 flex-wrap">
-                    <h2 className="h6 fw-bold mb-0 text-truncate text-dark">
-                        {activeTab === 'dayview' ? 'Day-by-Day Master' : tabs.find(t => t.slug === activeTab)?.label}
+                <div className="d-flex justify-content-between align-items-center gap-2 mb-2 flex-nowrap">
+                    <h2 className="h6 fw-bold mb-0 text-truncate text-dark" style={{ maxWidth: '170px' }}>
+                        {activeTab === 'dayview' ? 'Day Master' : tabs.find(t => t.slug === activeTab)?.label}
                     </h2>
 
-                    <div className="d-flex align-items-center gap-1.5">
-                        <Link to="/" className="btn btn-sm btn-outline-secondary fw-semibold py-1 px-2.5">
-                            <i className="bi bi-eye me-1 text-amber"></i> Public View
+                    <div className="d-flex align-items-center gap-1 shrink-0">
+                        <Link
+                            to="/"
+                            className="btn btn-sm btn-outline-secondary fw-semibold py-1 px-2"
+                            title="Open Public View"
+                        >
+                            <i className="bi bi-eye text-amber"></i>
+                            <span className="d-none d-sm-inline ms-1">Public View</span>
                         </Link>
 
                         <button
                             type="button"
-                            className="btn btn-sm btn-amber fw-bold text-nowrap shadow-sm py-1 px-3"
+                            className="btn btn-sm btn-amber fw-bold text-nowrap shadow-sm py-1 px-2 px-sm-3"
                             onClick={() => {
                                 setItemToEdit(null);
                                 setShowRecordModal(true);
                             }}
                         >
-                            <i className="bi bi-plus-lg me-1"></i> Add Record
+                            <i className="bi bi-plus-lg me-1"></i>
+                            <span>Add Record</span>
                         </button>
                     </div>
                 </div>
 
                 {/* Filter Bar */}
-                <div className="filter-bar-card mb-2.5">
-                    <div className="row g-1.5 align-items-center">
+                <div className="filter-bar-card mb-2">
+                    <div className="row g-2 align-items-center">
                         <div className="col-12 col-md-5">
                             <input
                                 type="text"

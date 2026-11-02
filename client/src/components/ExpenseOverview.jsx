@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+// File imports
 import './ExpenseOverview.css';
 import { calculateOverallExpenses } from '../utils/expenseCalculations';
 
@@ -27,7 +29,7 @@ export default function ExpenseOverview({ items, tabs }) {
 
                 <button
                     type="button"
-                    className="btn btn-sm btn-outline-secondary py-1 px-2.5 fw-semibold"
+                    className="btn btn-sm btn-outline-secondary py-1 px-2 fw-semibold"
                     onClick={() => setCollapsed(!collapsed)}
                 >
                     <i className={`bi ${collapsed ? 'bi-chevron-down' : 'bi-chevron-up'} me-1`}></i>
@@ -37,7 +39,7 @@ export default function ExpenseOverview({ items, tabs }) {
 
             {!collapsed && (
                 <>
-                    {/* 1. Grand Stat Cards with Generous Padding */}
+                    {/* 1. Grand Stat Cards */}
                     <div className="row g-2 g-sm-3 mb-3">
                         {/* Card 1: Total Budget */}
                         <div className="col-12 col-md-4">
@@ -92,9 +94,9 @@ export default function ExpenseOverview({ items, tabs }) {
                         </div>
                     </div>
 
-                    {/* 2. Dual-Colored Settlement Progress Bar */}
-                    <div className="p-2.5 rounded-3 border bg-light mb-3">
-                        <div className="d-flex justify-content-between small text-muted mb-1.5" style={{ fontSize: '11px' }}>
+                    {/* Dual-Colored Settlement Progress Bar */}
+                    <div className="p-2 rounded-3 border bg-light mb-3">
+                        <div className="d-flex justify-content-between small text-muted mb-1" style={{ fontSize: '11px' }}>
                             <span>Settlement Progress: <strong className="text-success">{data.overallPaidPct}% Settled</strong></span>
                             <span>Remaining: <strong className="text-danger">{data.overallBalancePct}% Due</strong></span>
                         </div>
@@ -114,8 +116,8 @@ export default function ExpenseOverview({ items, tabs }) {
                         </div>
                     </div>
 
-                    {/* 3. Section-Wise Budget Allocation Breakdown */}
-                    <div className="d-flex align-items-center gap-1.5 mb-2">
+                    {/* Section-Wise Budget Allocation Breakdown */}
+                    <div className="d-flex align-items-center gap-1 mb-2">
                         <i className="bi bi-pie-chart text-amber"></i>
                         <span className="fw-bold small text-dark">Section-Wise Budget Share (% of Total):</span>
                     </div>
@@ -125,9 +127,9 @@ export default function ExpenseOverview({ items, tabs }) {
                             <div key={sec.slug} className="col-12 col-md-6">
                                 <div className="category-allocation-card d-flex flex-column gap-1">
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <span className="fw-bold small text-dark d-flex align-items-center gap-1.5 text-truncate">
+                                        <span className="fw-bold small text-dark d-flex align-items-center gap-1">
                                             <i className={`bi ${sec.icon}`} style={{ color: sec.color }}></i>
-                                            <span className="text-truncate">{sec.label}</span>
+                                            <span>{sec.label}</span>
                                         </span>
                                         <span className="badge bg-light text-dark border">
                                             <strong>{sec.budgetSharePct}%</strong> share
@@ -135,7 +137,7 @@ export default function ExpenseOverview({ items, tabs }) {
                                     </div>
 
                                     {/* Category Progress Bar */}
-                                    <div className="progress my-0.5" style={{ height: '6px', borderRadius: '4px' }}>
+                                    <div className="progress my-1" style={{ height: '6px', borderRadius: '4px' }}>
                                         <div
                                             className="progress-bar"
                                             role="progressbar"
@@ -143,7 +145,7 @@ export default function ExpenseOverview({ items, tabs }) {
                                         ></div>
                                     </div>
 
-                                    <div className="d-flex justify-content-between text-muted mt-0.5" style={{ fontSize: '11.5px' }}>
+                                    <div className="d-flex justify-content-between text-muted mt-1" style={{ fontSize: '12px' }}>
                                         <span>Total: <strong className="text-dark">₹{sec.total.toLocaleString('en-IN')}</strong></span>
                                         <span className="text-success">Paid: ₹{sec.paid.toLocaleString('en-IN')}</span>
                                         <span className={sec.balance > 0 ? 'text-danger fw-semibold' : 'text-secondary'}>

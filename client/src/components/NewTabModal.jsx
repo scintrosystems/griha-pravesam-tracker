@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+// File imports
 import API from '../api/axiosClient';
 
 const AVAILABLE_BASE_FIELDS = [
@@ -12,6 +14,7 @@ const AVAILABLE_BASE_FIELDS = [
 ];
 
 export default function NewTabModal({ show, onClose, onTabCreated }) {
+    // State
     const [label, setLabel] = useState('');
     const [icon, setIcon] = useState('bi-folder');
     const [selectedBaseFields, setSelectedBaseFields] = useState(['date', 'inCharge']);
@@ -43,7 +46,6 @@ export default function NewTabModal({ show, onClose, onTabCreated }) {
         e.preventDefault();
         if (!label.trim()) return;
 
-        // Combine base selected + user created custom fields
         const finalFields = [
             ...selectedBaseFields.map(key => ({
                 key,
@@ -110,7 +112,7 @@ export default function NewTabModal({ show, onClose, onTabCreated }) {
                         </div>
 
                         {/* Select existing fields */}
-                        <span className="modal-label mb-1.5"><i className="bi bi-check2-square"></i> Include Existing Fields:</span>
+                        <span className="modal-label mb-1"><i className="bi bi-check2-square"></i> Include Existing Fields:</span>
                         <div className="p-2 border rounded-3 bg-light mb-3">
                             <div className="row g-2">
                                 {AVAILABLE_BASE_FIELDS.map(f => (
@@ -132,10 +134,10 @@ export default function NewTabModal({ show, onClose, onTabCreated }) {
                             </div>
                         </div>
 
-                        {/* Add completely new custom field */}
-                        <span className="modal-label mb-1.5"><i className="bi bi-plus-circle"></i> Add Completely New Custom Fields:</span>
+                        {/* Add new custom field */}
+                        <span className="modal-label mb-1"><i className="bi bi-plus-circle"></i> Add Completely New Custom Fields:</span>
                         <div className="p-2 border rounded-3 bg-light mb-2">
-                            <div className="row g-1.5 mb-2">
+                            <div className="row g-1 mb-2">
                                 <div className="col-7">
                                     <input
                                         type="text"
@@ -163,7 +165,7 @@ export default function NewTabModal({ show, onClose, onTabCreated }) {
                                 </div>
                             </div>
 
-                            {/* Added Custom Fields Badges */}
+                            {/* Custom Fields Badges */}
                             {customFields.length > 0 && (
                                 <div className="d-flex flex-wrap gap-1 mt-1">
                                     {customFields.map((cf, idx) => (

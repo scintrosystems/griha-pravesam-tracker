@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+
+// File imports
 import './Login.css';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
+    // State
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +30,6 @@ export default function Login() {
         <div className="container py-5 d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
             <div className="custom-card p-4 shadow-sm" style={{ maxWidth: '380px', width: '100%' }}>
 
-                {/* Shield Icon in Brand Amber */}
                 <div className="text-center mb-3">
                     <div
                         className="d-inline-flex align-items-center justify-content-center rounded-circle bg-amber-subtle text-amber mb-2"
@@ -39,10 +41,11 @@ export default function Login() {
                     <p className="text-muted small mb-0">Sign in to manage records, dropdowns, and tabs</p>
                 </div>
 
-                {error && <div className="alert alert-danger py-1.5 small text-center">{error}</div>}
+                {error && <div className="alert alert-danger py-1 small text-center">{error}</div>}
 
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-2.5">
+                    {/* Username */}
+                    <div className="mb-2">
                         <label className="form-label small fw-semibold text-secondary mb-1">Username</label>
                         <input
                             type="text"
@@ -54,7 +57,7 @@ export default function Login() {
                         />
                     </div>
 
-                    {/* Password Field with Eye Show/Hide Toggle */}
+                    {/* Password */}
                     <div className="mb-3">
                         <label className="form-label small fw-semibold text-secondary mb-1">Password</label>
                         <div className="input-group input-group-sm">

@@ -25,18 +25,18 @@
     white-space: nowrap;
 }
 
+.privacy-toggle-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 0.65rem;
+    padding: 0.75rem 1rem;
+}
+
+/* Responsive Styles */
 @media (min-width: 992px) {
     .admin-sidebar {
         min-height: calc(100vh - 54px);
         position: sticky;
         top: 54px;
     }
-}
-
-/* Privacy Toggle Card */
-.privacy-toggle-card {
-    background: #ffffff;
-    border: 1px solid var(--card-border, #e2e8f0);
-    border-radius: 0.65rem;
-    padding: 0.75rem 1rem;
 }

@@ -52,7 +52,7 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-/* 2. Section Card Container */
+/* Section Card Container */
 .day-master-card {
     background: #ffffff;
     border: 1px solid var(--card-border, #e2e8f0);
@@ -76,7 +76,7 @@
     flex-grow: 1;
 }
 
-/* 3. Section Header Themed Colors */
+/* Section Header Themed Colors */
 .sec-header-schedule {
     background: #fffbeb !important;
     color: #92400e !important;
@@ -118,13 +118,18 @@
     color: #b45309 !important;
 }
 
-/* 4. Item Row Card */
+/* Item Row Card */
 .day-master-item {
-    padding: 0.65rem 0.85rem;
+    padding: 0.65rem 0.75rem;
     border-radius: 0.5rem;
     border: 1px solid #e2e8f0;
     background: #ffffff;
-    transition: all 0.15s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+    overflow: hidden;
 }
 
 .day-master-item:hover {
@@ -132,7 +137,21 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-/* Compact & Clean Empty State inside Section Cards */
+.day-master-item .small {
+    word-break: break-word;
+}
+
+.day-master-item-content {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.day-master-badge-wrapper {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Empty State inside Section Cards */
 .day-master-empty-state {
     text-align: center;
     padding: 1.5rem 1rem !important;

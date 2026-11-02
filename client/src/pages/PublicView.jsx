@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+// File imports
 import API from '../api/axiosClient';
 import DayMasterView from '../components/DayMasterView';
 import TableView from '../components/TableView';
@@ -6,6 +8,7 @@ import { sortItemsByTime } from '../utils/timeSort';
 import ExpenseOverview from '../components/ExpenseOverview';
 
 export default function PublicView() {
+    // State
     const [tabs, setTabs] = useState([]);
     const [items, setItems] = useState([]);
     const [activeTab, setActiveTab] = useState('dayview');
@@ -14,7 +17,7 @@ export default function PublicView() {
     const [timeSort, setTimeSort] = useState('none');
     const [loading, setLoading] = useState(true);
 
-    // Settings from backend
+    // Settings
     const [settings, setSettings] = useState({
         showOverallExpensesToPublic: false,
         showSectionExpensesToPublic: false
@@ -88,10 +91,6 @@ export default function PublicView() {
     const pendingShopping = safeItems.filter(i => i && (i.tabSlug === 'purchase' || i.tabSlug === 'shopping') && i.status !== 'Completed').length;
     const totalTasks = safeItems.filter(i => i && i.tabSlug === 'todo').length;
 
-    const currentTabLabel = activeTab === 'dayview'
-        ? 'Day-by-Day Master'
-        : (tabs.find(t => t.slug === activeTab)?.label || 'Selected Section');
-
     return (
         <main className="container px-2 px-sm-3 py-2 py-sm-3">
             {/* 4 KPI Metrics Cards */}
@@ -159,60 +158,48 @@ export default function PublicView() {
                 </div>
             </div>
 
-            {/* Filter / Search Bar */}
+            {/* Navigation Card */}
             <div className="filter-bar-card mb-3">
-                <div className="row g-2 align-items-center">
-                    <div className="col-12 col-md-4">
-                        <div className="dropdown w-100">
-                            <button
-                                className="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center fw-bold filter-control-height"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                            >
-                                <span className="text-truncate me-1">
-                                    <i className="bi bi-grid-fill me-1.5 text-amber"></i>{currentTabLabel}
-                                </span>
-                            </button>
-                            <ul className="dropdown-menu w-100 shadow-sm" style={{ maxHeight: '280px', overflowY: 'auto' }}>
-                                <li>
-                                    <button
-                                        className={`dropdown-item small fw-bold ${activeTab === 'dayview' ? 'active bg-amber text-white' : ''}`}
-                                        onClick={() => setActiveTab('dayview')}
-                                    >
-                                        <i className="bi bi-calendar-check me-2"></i> Day-by-Day Master
-                                    </button>
-                                </li>
-                                <li><hr className="dropdown-divider my-1" /></li>
-                                {tabs.map(tab => (
-                                    <li key={tab.slug}>
-                                        <button
-                                            className={`dropdown-item small ${activeTab === tab.slug ? 'active bg-amber text-white fw-bold' : ''}`}
-                                            onClick={() => setActiveTab(tab.slug)}
-                                        >
-                                            <i className={`bi ${tab.icon} me-2`}></i> {tab.label}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
+                {/* HORIZONTAL SCROLLABLE TABS */}
+                <div className="public-tabs-container pb-2 border-bottom mb-2">
+                    <button
+                        type="button"
+                        className={`public-tab-btn ${activeTab === 'dayview' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('dayview')}
+                    >
+                        <i className="bi bi-calendar-check"></i> Day-by-Day Master
+                    </button>
 
-                    <div className="col-12 col-sm-4 col-md-3">
+                    {tabs.map(tab => (
+                        <button
+                            key={tab.slug}
+                            type="button"
+                            className={`public-tab-btn ${activeTab === tab.slug ? 'active' : ''}`}
+                            onClick={() => setActiveTab(tab.slug)}
+                        >
+                            <i className={`bi ${tab.icon || 'bi-folder'}`}></i> {tab.label}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Search, Calendar Date Picker & Time Sort */}
+                <div className="row g-2 align-items-center">
+                    <div className="col-12 col-sm-5">
                         <div className="input-group w-100">
-                            <span className="input-group-text bg-light border-end-0">
+                            <span className="input-group-text bg-light border-end-0 py-1">
                                 <i className="bi bi-search text-muted"></i>
                             </span>
                             <input
                                 type="text"
                                 className="form-control border-start-0 filter-control-height"
-                                placeholder="Search..."
+                                placeholder="Search anything (names, rooms, driver, pooja)..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </div>
                     </div>
 
-                    <div className="col-7 col-sm-5 col-md-3">
+                    <div className="col-7 col-sm-4">
                         <div className="d-flex align-items-center gap-1 w-100">
                             <input
                                 type="date"
@@ -232,7 +219,7 @@ export default function PublicView() {
                         </div>
                     </div>
 
-                    <div className="col-5 col-sm-3 col-md-2 text-end">
+                    <div className="col-5 col-sm-3 text-end">
                         <button
                             type="button"
                             className={`btn w-100 text-nowrap filter-control-height px-2 ${timeSort !== 'none' ? 'btn-amber fw-bold' : 'btn-outline-secondary'}`}
@@ -246,7 +233,6 @@ export default function PublicView() {
                 </div>
             </div>
 
-            {/* Conditionally Show Overall Budget to Public if Admin Allowed it */}
             {settings.showOverallExpensesToPublic && (
                 <ExpenseOverview items={items} tabs={tabs} />
             )}

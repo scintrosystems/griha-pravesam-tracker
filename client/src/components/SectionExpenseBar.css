@@ -6,7 +6,6 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
-/* Icon Circle */
 .section-expense-icon {
     width: 34px;
     height: 34px;
@@ -20,7 +19,6 @@
     flex-shrink: 0;
 }
 
-/* Financial Stat Item */
 .section-expense-stat {
     display: flex;
     flex-direction: column;
@@ -41,7 +39,6 @@
     line-height: 1.2;
 }
 
-/* Vertical Divider between Stats */
 .section-expense-divider {
     border-left: 1px solid #e2e8f0;
     padding-left: 0.85rem;

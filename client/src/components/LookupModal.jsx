@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+// File imports
 import API from '../api/axiosClient';
 
 const TYPE_CONFIG = {
@@ -8,6 +10,7 @@ const TYPE_CONFIG = {
 };
 
 export default function LookupModal({ show, onClose, lookups, onLookupUpdated }) {
+    // State
     const [type, setType] = useState('LOCATION');
     const [name, setName] = useState('');
     const [mapUrl, setMapUrl] = useState('');
@@ -59,7 +62,6 @@ export default function LookupModal({ show, onClose, lookups, onLookupUpdated })
                 </div>
 
                 <div className="p-3 overflow-y-auto" style={{ maxHeight: '72vh' }}>
-                    {/* Navigation Category Pills: Only Locations, Vehicles, Menu Items */}
                     <div className="d-flex flex-wrap gap-1 p-1 bg-light rounded-3 mb-3 border">
                         <button
                             type="button"
@@ -85,8 +87,8 @@ export default function LookupModal({ show, onClose, lookups, onLookupUpdated })
                     </div>
 
                     {/* Quick Add Form */}
-                    <form onSubmit={handleCreate} className="p-2.5 rounded-3 border bg-light mb-3">
-                        <span className="modal-label mb-1.5">
+                    <form onSubmit={handleCreate} className="p-2 rounded-3 border bg-light mb-3">
+                        <span className="modal-label mb-1">
                             <i className="bi bi-plus-circle"></i> Add New {currentConfig.single}
                         </span>
 
@@ -131,7 +133,7 @@ export default function LookupModal({ show, onClose, lookups, onLookupUpdated })
                             </div>
 
                             <div className="col-4 col-sm-1 text-end">
-                                <button type="submit" className="btn-submit w-100 py-1.5">
+                                <button type="submit" className="btn-submit w-100 py-1">
                                     <i className="bi bi-plus-lg me-1"></i> Add
                                 </button>
                             </div>
@@ -146,10 +148,10 @@ export default function LookupModal({ show, onClose, lookups, onLookupUpdated })
                         <table className="table table-sm table-hover align-middle mb-0">
                             <thead className="table-light small text-secondary">
                                 <tr>
-                                    <th className="py-2 px-2.5">Name</th>
-                                    {type === 'LOCATION' && <th className="py-2 px-2.5">Map Link</th>}
-                                    <th className="py-2 px-2.5">Notes</th>
-                                    <th className="py-2 px-2.5 text-end">Action</th>
+                                    <th className="py-2 px-2">Name</th>
+                                    {type === 'LOCATION' && <th className="py-2 px-2">Map Link</th>}
+                                    <th className="py-2 px-2">Notes</th>
+                                    <th className="py-2 px-2 text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="small">
@@ -162,9 +164,9 @@ export default function LookupModal({ show, onClose, lookups, onLookupUpdated })
                                 ) : (
                                     filteredLookups.map((item) => (
                                         <tr key={item._id}>
-                                            <td className="px-2.5 fw-semibold text-dark">{item.name}</td>
+                                            <td className="px-2 fw-semibold text-dark">{item.name}</td>
                                             {type === 'LOCATION' && (
-                                                <td className="px-2.5">
+                                                <td className="px-2">
                                                     {item.mapUrl ? (
                                                         <a href={item.mapUrl} target="_blank" rel="noreferrer" className="text-danger fw-semibold text-decoration-none">
                                                             <i className="bi bi-geo-alt-fill me-1"></i>Open Map
@@ -172,8 +174,8 @@ export default function LookupModal({ show, onClose, lookups, onLookupUpdated })
                                                     ) : '—'}
                                                 </td>
                                             )}
-                                            <td className="px-2.5 text-muted">{item.notes || '—'}</td>
-                                            <td className="px-2.5 text-end">
+                                            <td className="px-2 text-muted">{item.notes || '—'}</td>
+                                            <td className="px-2 text-end">
                                                 <button
                                                     type="button"
                                                     className="btn btn-sm btn-outline-danger py-0 px-2"

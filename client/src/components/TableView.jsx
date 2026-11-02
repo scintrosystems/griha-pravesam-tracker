@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+// File imports
 import StatusBadge from './StatusBadge';
 import API from '../api/axiosClient';
 import SectionExpenseBar from './SectionExpenseBar';
@@ -19,7 +21,7 @@ export default function TableView({
     const shouldShowExpenseRibbon = isAdmin || showSectionExpenses;
 
     // Category Budget editing modal state
-    const [editingBudgetCat, setEditingBudgetCat] = useState(null); // 'Poojai' | 'General' | null
+    const [editingBudgetCat, setEditingBudgetCat] = useState(null);
     const [budgetCost, setBudgetCost] = useState('');
     const [budgetPaid, setBudgetPaid] = useState('');
 
@@ -119,21 +121,21 @@ export default function TableView({
 
                 <td>
                     <span
-                        className={`fw-bold d-block text-truncate ${isDone && isPurchaseSection ? 'text-decoration-line-through text-muted' : 'text-dark'}`}
+                        className={`fw-bold d-block ${isDone && isPurchaseSection ? 'text-decoration-line-through text-muted' : 'text-dark'}`}
                         style={{ maxWidth: '240px' }}
                     >
                         {item.title}
                     </span>
 
                     {item.description && (
-                        <span className="text-muted fst-italic d-block mt-0.5" style={{ fontSize: '12px' }}>
+                        <span className="text-muted fst-italic d-block mt-1" style={{ fontSize: '12px' }}>
                             <i className="bi bi-card-text me-1 text-amber"></i>{item.description}
                         </span>
                     )}
 
                     {/* If NOT purchase section, show individual financials */}
                     {!isPurchaseSection && isAdmin && (total > 0 || paid > 0) && (
-                        <div className="d-flex flex-wrap align-items-center gap-1 mt-1.5" style={{ fontSize: '11px' }}>
+                        <div className="d-flex flex-wrap align-items-center gap-1 mt-1" style={{ fontSize: '11px' }}>
                             <span className="badge bg-light text-dark border">Total: ₹{total.toLocaleString('en-IN')}</span>
                             <span className="badge bg-success-subtle text-success border border-success-subtle">Paid: ₹{paid.toLocaleString('en-IN')}</span>
                             {balance > 0 ? (
@@ -158,7 +160,7 @@ export default function TableView({
                     {item.roomCount && <div><strong>Rooms:</strong> {item.roomCount} ({item.headcountPerRoom || '2 Max'})</div>}
 
                     {item.checkInDate && (
-                        <div className="small text-secondary mt-0.5">
+                        <div className="small text-secondary mt-1">
                             <span className="text-dark fw-bold">In:</span> {item.checkInDate} {item.checkInTime} | <span className="text-dark fw-bold">Out:</span> {item.checkOutDate} {item.checkOutTime}
                         </div>
                     )}
@@ -195,7 +197,7 @@ export default function TableView({
                                 <i className="bi bi-person-fill text-amber me-1"></i>{item.inCharge.name}
                             </div>
                             {item.inCharge.phone && (
-                                <a href={`tel:${item.inCharge.phone}`} className="text-success fw-bold text-decoration-none small d-inline-block mt-0.5">
+                                <a href={`tel:${item.inCharge.phone}`} className="text-success fw-bold text-decoration-none small d-inline-block mt-1">
                                     <i className="bi bi-telephone-fill me-1"></i>{item.inCharge.phone}
                                 </a>
                             )}
@@ -203,7 +205,7 @@ export default function TableView({
                     ) : item.phone ? (
                         <div>
                             <div className="fw-semibold text-dark">{item.title}</div>
-                            <a href={`tel:${item.phone}`} className="text-success fw-bold text-decoration-none small d-inline-block mt-0.5">
+                            <a href={`tel:${item.phone}`} className="text-success fw-bold text-decoration-none small d-inline-block mt-1">
                                 <i className="bi bi-telephone-fill me-1"></i>{item.phone}
                             </a>
                             {item.role && <div className="text-muted small">({item.role})</div>}
@@ -247,22 +249,20 @@ export default function TableView({
                 />
             )}
 
-            {/* ============================================================== */}
-            {/* PURCHASE LIST: Category-Wise Budget Cards (Poojai vs General)  */}
-            {/* ============================================================== */}
+            {/* PURCHASE LIST: Category-Wise Budget Cards (Poojai vs General) */}
             {isPurchaseSection && (
                 <div className="row g-2 mb-3">
                     {/* Poojai Category Budget Card */}
                     <div className="col-12 col-md-6">
                         <div className="custom-card p-3 border-amber-subtle bg-amber-subtle d-flex flex-column justify-content-between h-100">
                             <div className="d-flex justify-content-between align-items-center mb-1">
-                                <span className="fw-bold small text-dark d-flex align-items-center gap-1.5">
+                                <span className="fw-bold small text-dark d-flex align-items-center gap-1">
                                     <span className="fs-5">🪔</span> Poojai Items Category Budget
                                 </span>
                                 {isAdmin && (
                                     <button
                                         type="button"
-                                        className="btn btn-sm btn-outline-amber py-0.5 px-2"
+                                        className="btn btn-sm btn-outline-amber py-1 px-2"
                                         onClick={() => handleOpenBudgetModal('Poojai')}
                                     >
                                         <i className="bi bi-pencil-square me-1"></i> Set Budget
@@ -292,13 +292,13 @@ export default function TableView({
                     <div className="col-12 col-md-6">
                         <div className="custom-card p-3 border bg-light d-flex flex-column justify-content-between h-100">
                             <div className="d-flex justify-content-between align-items-center mb-1">
-                                <span className="fw-bold small text-dark d-flex align-items-center gap-1.5">
+                                <span className="fw-bold small text-dark d-flex align-items-center gap-1">
                                     <span className="fs-5">🛍️</span> General Provisions Category Budget
                                 </span>
                                 {isAdmin && (
                                     <button
                                         type="button"
-                                        className="btn btn-sm btn-outline-secondary py-0.5 px-2"
+                                        className="btn btn-sm btn-outline-secondary py-1 px-2"
                                         onClick={() => handleOpenBudgetModal('General')}
                                     >
                                         <i className="bi bi-pencil-square me-1"></i> Set Budget
@@ -326,9 +326,7 @@ export default function TableView({
                 </div>
             )}
 
-            {/* ============================================================== */}
-            {/* TABLE VIEW (Grouped by Category on Purchase List)               */}
-            {/* ============================================================== */}
+            {/* TABLE VIEW (Grouped by Category on Purchase List) */}
             <div className="custom-card overflow-hidden">
                 <div className="table-responsive">
                     <table className="table table-hover align-middle mb-0" style={{ minWidth: '640px' }}>
@@ -344,7 +342,6 @@ export default function TableView({
                             </tr>
                         </thead>
                         <tbody>
-                            {/* If Purchase List: Show Poojai Group first, then General Group */}
                             {isPurchaseSection ? (
                                 <>
                                     {/* Header: Poojai Items */}
@@ -403,7 +400,7 @@ export default function TableView({
                         </div>
                         <form onSubmit={handleSaveBudget}>
                             <div className="p-3">
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label">Total Category Budget (₹) *</label>
                                     <input
                                         type="number"
@@ -414,7 +411,7 @@ export default function TableView({
                                         required
                                     />
                                 </div>
-                                <div className="mb-2.5">
+                                <div className="mb-2">
                                     <label className="modal-label">Paid / Advance Amount (₹)</label>
                                     <input
                                         type="number"

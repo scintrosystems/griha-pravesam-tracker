@@ -1,4 +1,6 @@
 import React from 'react';
+
+// File imports
 import './DayMasterView.css';
 import StatusBadge from './StatusBadge';
 
@@ -27,17 +29,17 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
 
     return (
         <div className="mb-4">
-            {/* 1. Top Master Banner with Generous Padding */}
+            {/* Top Master Banner */}
             <div className="day-master-banner">
-                <div className="d-flex align-items-center gap-2.5 min-w-0">
+                <div className="d-flex align-items-center gap-2 min-w-0">
                     <div className="day-master-banner-icon">
                         <i className="bi bi-calendar2-check-fill"></i>
                     </div>
                     <div className="min-w-0">
-                        <h5 className="day-master-banner-title text-truncate">
+                        <h5 className="day-master-banner-title">
                             Daily Master View {currentDay ? `(${currentDay})` : '(All Days)'}
                         </h5>
-                        <span className="day-master-banner-sub text-truncate">
+                        <span className="day-master-banner-sub">
                             Live agenda, food, rooms, vehicles, pooja & to-dos
                         </span>
                     </div>
@@ -48,7 +50,7 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
                 </span>
             </div>
 
-            {/* 2. Grid of Sections */}
+            {/* Grid of Sections */}
             <div className="row g-2 g-sm-3">
                 {displayTabs.map((tab) => {
                     const theme = SECTION_THEMES[tab.slug] || {
@@ -62,9 +64,9 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
                             <div className="day-master-card h-100">
                                 {/* Header with Title & Counter */}
                                 <div className={`day-master-card-header ${theme.headerClass}`}>
-                                    <span className="fw-bold small d-flex align-items-center gap-2 text-truncate">
+                                    <span className="fw-bold small d-flex align-items-center gap-2">
                                         <i className={`bi ${tab.icon || theme.defaultIcon}`}></i>
-                                        <span className="text-truncate">{tab.label}</span>
+                                        <span>{tab.label}</span>
                                     </span>
                                     <span className="badge rounded-pill bg-white text-dark border">
                                         {sectionItems.length}
@@ -83,12 +85,9 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
                                     ) : (
                                         <div className="d-flex flex-column gap-2">
                                             {sectionItems.map((item) => (
-                                                <div
-                                                    key={item._id}
-                                                    className="day-master-item d-flex justify-content-between align-items-start gap-2"
-                                                >
-                                                    <div className="min-w-0 flex-grow-1">
-                                                        <span className="fw-bold text-dark small d-block text-truncate">
+                                                <div key={item._id} className="day-master-item">
+                                                    <div className="day-master-item-content">
+                                                        <span className="fw-bold text-dark small d-block">
                                                             {item.title}
                                                         </span>
 
@@ -109,7 +108,7 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
                                                         {/* Location & In-Charge with Phone */}
                                                         <div className="small text-secondary" style={{ fontSize: '11px' }}>
                                                             {item.location && (
-                                                                <span className="me-2 d-inline-block text-truncate" style={{ maxWidth: '170px' }}>
+                                                                <span className="me-2 d-inline-block" style={{ maxWidth: '170px' }}>
                                                                     {item.location.mapUrl ? (
                                                                         <a
                                                                             href={item.location.mapUrl}
@@ -126,7 +125,7 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
                                                             )}
 
                                                             {item.inCharge && (
-                                                                <div className="mt-0.5">
+                                                                <div className="mt-1">
                                                                     <span className="fw-semibold text-dark me-1">
                                                                         <i className="bi bi-person me-1 text-amber"></i>{item.inCharge.name}
                                                                     </span>
@@ -141,7 +140,7 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
 
                                                         {/* Rooms Check-in / Out display */}
                                                         {item.checkInDate && (
-                                                            <div className="text-secondary small mt-0.5" style={{ fontSize: '11px' }}>
+                                                            <div className="text-secondary small mt-1" style={{ fontSize: '11px' }}>
                                                                 <strong>In:</strong> {item.checkInDate} {item.checkInTime} | <strong>Out:</strong> {item.checkOutDate} {item.checkOutTime}
                                                                 {item.bookedBy && <span> • By: {item.bookedBy}</span>}
                                                             </div>
@@ -161,7 +160,7 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
                                                     </div>
 
                                                     {/* Status Badge */}
-                                                    <div className="shrink-0 pt-0.5">
+                                                    <div className="day-master-badge-wrapper">
                                                         <StatusBadge
                                                             status={item.status}
                                                             itemId={item._id}

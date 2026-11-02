@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+// File imports
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import PublicView from './pages/PublicView';
@@ -7,6 +9,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 
 const MainLayout = () => {
+  // State
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { isAdmin, loading } = useAuth();
 

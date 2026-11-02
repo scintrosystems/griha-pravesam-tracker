@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+// File imports
 import API from '../api/axiosClient';
 import DayMasterView from './DayMasterView';
 import TableView from './TableView';
@@ -7,6 +9,7 @@ import NewTabModal from './NewTabModal';
 import LookupModal from './LookupModal';
 
 export default function Dashboard({ isAdmin }) {
+    // State
     const [tabs, setTabs] = useState([]);
     const [items, setItems] = useState([]);
     const [lookups, setLookups] = useState([]);
@@ -14,8 +17,6 @@ export default function Dashboard({ isAdmin }) {
     const [dayFilter, setDayFilter] = useState('all');
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
-
-    // Modals state
     const [showRecordModal, setShowRecordModal] = useState(false);
     const [itemToEdit, setItemToEdit] = useState(null);
     const [showNewTabModal, setShowNewTabModal] = useState(false);
@@ -151,7 +152,7 @@ export default function Dashboard({ isAdmin }) {
                         {tabs.map((tab) => (
                             <li key={tab.slug} className="nav-item d-flex align-items-center">
                                 <button
-                                    className={`nav-link py-1 px-2.5 small fw-semibold text-nowrap ${activeTab === tab.slug ? 'bg-warning text-dark active' : 'text-secondary'}`}
+                                    className={`nav-link py-1 px-2 small fw-semibold text-nowrap ${activeTab === tab.slug ? 'bg-warning text-dark active' : 'text-secondary'}`}
                                     onClick={() => setActiveTab(tab.slug)}
                                 >
                                     <i className={`bi ${tab.icon} me-1`}></i> {tab.label}
