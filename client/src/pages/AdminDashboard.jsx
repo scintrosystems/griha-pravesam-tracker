@@ -20,7 +20,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
     const [activeTab, setActiveTab] = useState('dayview');
     const [selectedDate, setSelectedDate] = useState('');
     const [search, setSearch] = useState('');
-    const [timeSort, setTimeSort] = useState('none');
+    const [timeSort, setTimeSort] = useState('asc');
     const [loading, setLoading] = useState(true);
 
     // Privacy toggles state
@@ -389,6 +389,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                 ) : activeTab === 'dayview' ? (
                     <DayMasterView
                         tabs={tabs}
+                        lookups={lookups}
                         items={filteredItems}
                         currentDay={selectedDate || ''}
                         isAdmin={true}
@@ -399,6 +400,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                         items={tabSpecificItems}
                         activeTabSlug={activeTab}
                         tabs={tabs}
+                        lookups={lookups}
                         isAdmin={true}
                         showSectionExpenses={true}
                         onEdit={(item) => {

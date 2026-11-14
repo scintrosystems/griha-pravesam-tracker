@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 import StatusBadge from './StatusBadge';
 import API from '../api/axiosClient';
 import SectionExpenseBar from './SectionExpenseBar';
+import { parseDishesWithNotes } from '../utils/menuParser';
 
 export default function TableView({
     items = [],
     activeTabSlug,
     tabs = [],
+    lookups = [],
     isAdmin = false,
     showSectionExpenses = false,
     onEdit,
@@ -148,6 +150,34 @@ export default function TableView({
                 </td>
 
                 <td>
+                    {item.menuItems && (
+                        <div className="mb-2" style={{ maxWidth: '440px' }}>
+                            <span className="small text-muted fw-bold d-block mb-1" style={{ fontSize: '10px' }}>
+                                MENU ITEMS & DETAILS:
+                            </span>
+                            <div className="d-flex flex-wrap gap-1.5 align-items-center">
+                                {parseDishesWithNotes(item.menuItems, lookups).map((itemObj, i) => (
+                                    <span
+                                        key={i}
+                                        className="badge bg-light text-dark border px-2.5 py-1.5 text-wrap text-start shadow-xs d-inline-flex flex-wrap align-items-center gap-1"
+                                        style={{
+                                            fontSize: '12px',
+                                            borderRadius: '6px',
+                                            lineHeight: '1.4',
+                                            maxWidth: '100%'
+                                        }}
+                                    >
+                                        <span className="fw-bold">{itemObj.name}</span>
+                                        {itemObj.note && (
+                                            <span className="badge bg-amber-subtle text-amber border border-amber-subtle py-0.5 px-1.5" style={{ fontSize: '11px' }}>
+                                                {itemObj.note}
+                                            </span>
+                                        )}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     {item.quantity && <div><strong>Qty:</strong> {item.quantity}</div>}
                     {item.specifics && <div><strong>Specs:</strong> {item.specifics}</div>}
                     {item.purchasedFrom && (
@@ -155,7 +185,6 @@ export default function TableView({
                             <strong>Source:</strong> {item.purchasedFrom}
                         </div>
                     )}
-                    {item.menuItems && <div><strong>Menu:</strong> {item.menuItems}</div>}
                     {item.roomTariff && <div><strong>Tariff:</strong> {item.roomTariff}</div>}
                     {item.roomCount && <div><strong>Rooms:</strong> {item.roomCount} ({item.headcountPerRoom || '2 Max'})</div>}
 

@@ -11,10 +11,11 @@ export default function PublicView() {
     // State
     const [tabs, setTabs] = useState([]);
     const [items, setItems] = useState([]);
+    const [lookups, setLookups] = useState([]);
     const [activeTab, setActiveTab] = useState('dayview');
     const [selectedDate, setSelectedDate] = useState('');
     const [search, setSearch] = useState('');
-    const [timeSort, setTimeSort] = useState('none');
+    const [timeSort, setTimeSort] = useState('asc');
     const [loading, setLoading] = useState(true);
 
     // Settings
@@ -26,14 +27,16 @@ export default function PublicView() {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [tabsRes, itemsRes, settingsRes] = await Promise.all([
+            const [tabsRes, itemsRes, lookupsRes, settingsRes] = await Promise.all([
                 API.get('/tabs').catch(() => ({ data: [] })),
                 API.get('/items').catch(() => ({ data: [] })),
+                API.get('/lookups').catch(() => ({ data: [] })), // 👈 FETCH LOOKUPS
                 API.get('/settings').catch(() => ({ data: {} }))
             ]);
 
             setTabs(Array.isArray(tabsRes.data) ? tabsRes.data : []);
             setItems(Array.isArray(itemsRes.data) ? itemsRes.data : []);
+            setLookups(Array.isArray(lookupsRes.data) ? lookupsRes.data : []); // 👈 SET LOOKUPS
             if (settingsRes.data && typeof settingsRes.data === 'object') {
                 setSettings({
                     showOverallExpensesToPublic: !!settingsRes.data.showOverallExpensesToPublic,
@@ -44,6 +47,7 @@ export default function PublicView() {
             console.error('Failed to load data', err);
             setItems([]);
             setTabs([]);
+            setLookups([]);
         } finally {
             setLoading(false);
         }
@@ -246,6 +250,7 @@ export default function PublicView() {
             ) : activeTab === 'dayview' ? (
                 <DayMasterView
                     tabs={tabs}
+                    lookups={lookups}
                     items={filteredItems}
                     currentDay={selectedDate || ''}
                     isAdmin={false}
@@ -255,6 +260,7 @@ export default function PublicView() {
                     items={tabSpecificItems}
                     activeTabSlug={activeTab}
                     tabs={tabs}
+                    lookups={lookups}
                     isAdmin={false}
                     showSectionExpenses={settings.showSectionExpensesToPublic}
                     onRefresh={fetchData}

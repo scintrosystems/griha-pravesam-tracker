@@ -3,6 +3,7 @@ import React from 'react';
 // File imports
 import './DayMasterView.css';
 import StatusBadge from './StatusBadge';
+import { parseDishesWithNotes } from '../utils/menuParser';
 
 const SECTION_THEMES = {
     schedule: { headerClass: 'sec-header-schedule', defaultIcon: 'bi-calendar-event' },
@@ -15,7 +16,7 @@ const SECTION_THEMES = {
     contacts: { headerClass: 'sec-header-contacts', defaultIcon: 'bi-person-lines-fill' }
 };
 
-export default function DayMasterView({ tabs = [], items = [], currentDay, isAdmin, onCycleStatus }) {
+export default function DayMasterView({ tabs = [], items = [], lookups = [], currentDay, isAdmin, onCycleStatus }) {
     if (!tabs || tabs.length === 0) {
         return (
             <div className="custom-card text-center py-4 text-muted small">
@@ -143,6 +144,32 @@ export default function DayMasterView({ tabs = [], items = [], currentDay, isAdm
                                                             <div className="text-secondary small mt-1" style={{ fontSize: '11px' }}>
                                                                 <strong>In:</strong> {item.checkInDate} {item.checkInTime} | <strong>Out:</strong> {item.checkOutDate} {item.checkOutTime}
                                                                 {item.bookedBy && <span> • By: {item.bookedBy}</span>}
+                                                            </div>
+                                                        )}
+
+                                                        {/* Food Menu Pill Badges */}
+                                                        {item.menuItems && (
+                                                            <div className="mt-1.5 mb-1" style={{ maxWidth: '100%' }}>
+                                                                <div className="d-flex flex-wrap gap-1">
+                                                                    {parseDishesWithNotes(item.menuItems, lookups).map((itemObj, i) => (
+                                                                        <span
+                                                                            key={i}
+                                                                            className="badge bg-light text-dark border px-2 py-1 text-wrap text-start d-inline-flex flex-wrap align-items-center gap-1 shadow-xs"
+                                                                            style={{
+                                                                                fontSize: '11px',
+                                                                                borderRadius: '5px',
+                                                                                lineHeight: '1.3'
+                                                                            }}
+                                                                        >
+                                                                            <span className="fw-semibold">{itemObj.name}</span>
+                                                                            {itemObj.note && (
+                                                                                <span className="badge bg-amber-subtle text-amber border border-amber-subtle py-0 px-1" style={{ fontSize: '10px' }}>
+                                                                                    {itemObj.note}
+                                                                                </span>
+                                                                            )}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
                                                             </div>
                                                         )}
 

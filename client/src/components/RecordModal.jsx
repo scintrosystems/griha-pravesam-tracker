@@ -424,34 +424,67 @@ export default function RecordModal({
 
                                 <div className="mb-2">
                                     <div className="d-flex justify-content-between align-items-center mb-1">
-                                        <label className="modal-label mb-0"><i className="bi bi-egg-fried"></i> Menu Items</label>
-                                        <div className="d-flex align-items-center gap-1">
-                                            <span className="small text-muted" style={{ fontSize: '11px' }}>Quick Pick:</span>
-                                            <select
-                                                className="modal-select py-0 px-1"
-                                                style={{ fontSize: '11px', height: '24px' }}
-                                                onChange={(e) => {
-                                                    handleAppendMenuItem(e.target.value);
-                                                    e.target.value = '';
-                                                }}
-                                            >
-                                                <option value="">+ Add Dish</option>
-                                                {masterMenuItems.map(m => (
-                                                    <option key={m._id} value={m.name}>{m.name}</option>
-                                                ))}
-                                            </select>
-                                            <button type="button" className="btn btn-sm btn-link text-amber p-0" title="Manage Dishes" onClick={onOpenLookupModal}>
-                                                <i className="bi bi-gear"></i>
-                                            </button>
-                                        </div>
+                                        <label className="modal-label mb-0"><i className="bi bi-egg-fried"></i> Menu Dishes</label>
+                                        <button type="button" className="btn btn-sm btn-link text-amber p-0 text-decoration-none small fw-semibold" onClick={onOpenLookupModal}>
+                                            <i className="bi bi-plus-circle me-1"></i> New Dish to Master
+                                        </button>
                                     </div>
-                                    <textarea
-                                        rows="2"
-                                        className="modal-input w-100"
-                                        placeholder="e.g. Idiyappam, Idli, Pongal, Coffee"
-                                        value={menuItems}
-                                        onChange={(e) => setMenuItems(e.target.value)}
-                                    ></textarea>
+
+                                    <div className="modal-input-group mb-2">
+                                        <select
+                                            className="modal-select"
+                                            onChange={(e) => {
+                                                const selectedId = e.target.value;
+                                                if (!selectedId) return;
+
+                                                const selectedDish = masterMenuItems.find(m => m._id === selectedId);
+                                                if (!selectedDish) return;
+
+                                                // Combine Name + Note if note exists
+                                                const formattedEntry = selectedDish.notes
+                                                    ? `${selectedDish.name} (${selectedDish.notes})`
+                                                    : selectedDish.name;
+
+                                                const existingList = menuItems ? menuItems.split(',').map(s => s.trim()).filter(Boolean) : [];
+                                                if (!existingList.includes(formattedEntry)) {
+                                                    setMenuItems([...existingList, formattedEntry].join(', '));
+                                                }
+                                                e.target.value = '';
+                                            }}
+                                        >
+                                            <option value="">— Select dish to add to menu —</option>
+                                            {masterMenuItems.map(m => (
+                                                <option key={m._id} value={m._id}>
+                                                    {m.name} {m.notes ? `(${m.notes})` : ''}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <button type="button" className="btn-addon-add" title="Manage Dishes in Master" onClick={onOpenLookupModal}>
+                                            <i className="bi bi-gear-fill"></i>
+                                        </button>
+                                    </div>
+
+                                    {/* Selected Dishes Displayed as Tags / Pills with Remove Button */}
+                                    <div className="p-2 rounded border bg-light d-flex flex-wrap gap-1.5" style={{ minHeight: '42px' }}>
+                                        {menuItems ? (
+                                            menuItems.split(',').map(s => s.trim()).filter(Boolean).map((dish, idx) => (
+                                                <span key={idx} className="badge bg-white text-dark border px-2 py-1.5 d-inline-flex align-items-center gap-1.5 shadow-xs" style={{ fontSize: '12px' }}>
+                                                    <span>{dish}</span>
+                                                    <i
+                                                        className="bi bi-x-circle-fill text-secondary hover-danger"
+                                                        style={{ cursor: 'pointer', fontSize: '11px' }}
+                                                        title="Remove"
+                                                        onClick={() => {
+                                                            const updated = menuItems.split(',').map(s => s.trim()).filter(Boolean).filter((_, i) => i !== idx);
+                                                            setMenuItems(updated.join(', '));
+                                                        }}
+                                                    ></i>
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <span className="text-muted small fst-italic py-1">No dishes selected yet. Pick from the dropdown above.</span>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="mb-2">
