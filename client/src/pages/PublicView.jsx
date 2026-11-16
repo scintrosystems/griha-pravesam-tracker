@@ -261,6 +261,7 @@ export default function PublicView() {
                     activeTabSlug={activeTab}
                     tabs={tabs}
                     lookups={lookups}
+                    allItems={items}
                     isAdmin={false}
                     showSectionExpenses={settings.showSectionExpensesToPublic}
                     onRefresh={fetchData}

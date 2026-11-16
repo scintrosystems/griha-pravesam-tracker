@@ -4,6 +4,7 @@ import React from 'react';
 import './DayMasterView.css';
 import StatusBadge from './StatusBadge';
 import { parseDishesWithNotes } from '../utils/menuParser';
+import { formatContactDisplay } from '../utils/contactHelper';
 
 const SECTION_THEMES = {
     schedule: { headerClass: 'sec-header-schedule', defaultIcon: 'bi-calendar-event' },
@@ -92,22 +93,44 @@ export default function DayMasterView({ tabs = [], items = [], lookups = [], cur
                                                             {item.title}
                                                         </span>
 
-                                                        {/* Date & Time Pills */}
-                                                        <div className="d-flex flex-wrap align-items-center gap-1 my-1">
-                                                            {item.date && (
-                                                                <span className="badge bg-light text-secondary border" style={{ fontSize: '10px' }}>
-                                                                    <i className="bi bi-calendar3 me-1 text-amber"></i>{item.date}
-                                                                </span>
-                                                            )}
-                                                            {item.timeSlot && (
-                                                                <span className="badge bg-amber-subtle text-dark border border-amber-subtle" style={{ fontSize: '10px' }}>
-                                                                    <i className="bi bi-clock me-1 text-amber"></i>{item.timeSlot}
-                                                                </span>
-                                                            )}
-                                                        </div>
+                                                        {/* Date & Time Pills (Hidden on Contact Directory) */}
+                                                        {tab.slug !== 'contacts' && (
+                                                            <div className="d-flex flex-wrap align-items-center gap-1 my-1">
+                                                                {item.date && (
+                                                                    <span className="badge bg-light text-secondary border" style={{ fontSize: '10px' }}>
+                                                                        <i className="bi bi-calendar3 me-1 text-amber"></i>{item.date}
+                                                                    </span>
+                                                                )}
+                                                                {item.timeSlot && (
+                                                                    <span className="badge bg-amber-subtle text-dark border border-amber-subtle" style={{ fontSize: '10px' }}>
+                                                                        <i className="bi bi-clock me-1 text-amber"></i>{item.timeSlot}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        {/* Contact Directory: Phone Number & Role */}
+                                                        {tab.slug === 'contacts' && (
+                                                            <div className="mt-1 d-flex align-items-center gap-2">
+                                                                {item.phone && (
+                                                                    <a
+                                                                        href={`tel:${item.phone}`}
+                                                                        className="text-success fw-bold text-decoration-none d-inline-flex align-items-center gap-1 small"
+                                                                    >
+                                                                        <i className="bi bi-telephone-fill"></i>
+                                                                        <span>{item.phone}</span>
+                                                                    </a>
+                                                                )}
+                                                                {item.role && (
+                                                                    <span className="badge bg-light text-secondary border" style={{ fontSize: '10.5px' }}>
+                                                                        {item.role}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        )}
 
                                                         {/* Location & In-Charge with Phone */}
-                                                        <div className="small text-secondary" style={{ fontSize: '11px' }}>
+                                                        <div className="small text-secondary mt-0.5" style={{ fontSize: '11px' }}>
                                                             {item.location && (
                                                                 <span className="me-2 d-inline-block" style={{ maxWidth: '170px' }}>
                                                                     {item.location.mapUrl ? (
@@ -125,16 +148,58 @@ export default function DayMasterView({ tabs = [], items = [], lookups = [], cur
                                                                 </span>
                                                             )}
 
-                                                            {item.inCharge && (
+                                                            {/* In-Charge Person from ID or String */}
+                                                            {(() => {
+                                                                const contact = formatContactDisplay(item.inCharge, items, lookups);
+                                                                if (!contact || !contact.name) return null;
+
+                                                                return (
+                                                                    <div className="mt-1">
+                                                                        <span className="fw-semibold text-dark me-1">
+                                                                            <i className="bi bi-person me-1 text-amber"></i>
+                                                                            {contact.name}
+                                                                        </span>
+                                                                        {contact.phone && (
+                                                                            <a
+                                                                                href={`tel:${contact.phone}`}
+                                                                                className="text-success fw-bold text-decoration-none"
+                                                                            >
+                                                                                <i className="bi bi-telephone-fill me-1"></i>
+                                                                                {contact.phone}
+                                                                            </a>
+                                                                        )}
+                                                                    </div>
+                                                                );
+                                                            })()}
+
+                                                            {/* Driver display for Vehicles */}
+                                                            {item.driverNumber && !item.inCharge && (
                                                                 <div className="mt-1">
-                                                                    <span className="fw-semibold text-dark me-1">
-                                                                        <i className="bi bi-person me-1 text-amber"></i>{item.inCharge.name}
-                                                                    </span>
-                                                                    {item.inCharge.phone && (
-                                                                        <a href={`tel:${item.inCharge.phone}`} className="text-success fw-bold text-decoration-none">
-                                                                            <i className="bi bi-telephone-fill me-1"></i>{item.inCharge.phone}
-                                                                        </a>
-                                                                    )}
+                                                                    {(() => {
+                                                                        const rawDriver = String(item.driverNumber).trim();
+                                                                        const foundDriver = items.filter(i => i && i.tabSlug === 'contacts').find(c =>
+                                                                            (c.phone && c.phone.trim() === rawDriver) ||
+                                                                            (c.title && c.title.trim().toLowerCase() === rawDriver.toLowerCase())
+                                                                        );
+
+                                                                        const dName = foundDriver ? foundDriver.title : '';
+                                                                        const dPhone = foundDriver ? foundDriver.phone : rawDriver;
+
+                                                                        return (
+                                                                            <div>
+                                                                                {dName && (
+                                                                                    <span className="fw-semibold text-dark me-1">
+                                                                                        <i className="bi bi-person-badge text-amber me-1"></i>
+                                                                                        {dName}
+                                                                                    </span>
+                                                                                )}
+                                                                                <a href={`tel:${dPhone}`} className="text-success fw-bold text-decoration-none">
+                                                                                    <i className="bi bi-telephone-fill me-1"></i>
+                                                                                    {dPhone}
+                                                                                </a>
+                                                                            </div>
+                                                                        );
+                                                                    })()}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -186,15 +251,17 @@ export default function DayMasterView({ tabs = [], items = [], lookups = [], cur
                                                         )}
                                                     </div>
 
-                                                    {/* Status Badge */}
-                                                    <div className="day-master-badge-wrapper">
-                                                        <StatusBadge
-                                                            status={item.status}
-                                                            itemId={item._id}
-                                                            isAdmin={isAdmin}
-                                                            onCycleStatus={onCycleStatus}
-                                                        />
-                                                    </div>
+                                                    {/* Status Badge (Hidden on Contact Directory) */}
+                                                    {tab.slug !== 'contacts' && (
+                                                        <div className="day-master-badge-wrapper">
+                                                            <StatusBadge
+                                                                status={item.status}
+                                                                itemId={item._id}
+                                                                isAdmin={isAdmin}
+                                                                onCycleStatus={onCycleStatus}
+                                                            />
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>

@@ -5,12 +5,14 @@ import StatusBadge from './StatusBadge';
 import API from '../api/axiosClient';
 import SectionExpenseBar from './SectionExpenseBar';
 import { parseDishesWithNotes } from '../utils/menuParser';
+import { formatContactDisplay } from '../utils/contactHelper';
 
 export default function TableView({
     items = [],
     activeTabSlug,
     tabs = [],
     lookups = [],
+    allItems = [],
     isAdmin = false,
     showSectionExpenses = false,
     onEdit,
@@ -220,32 +222,82 @@ export default function TableView({
                 </td>
 
                 <td>
-                    {item.inCharge ? (
-                        <div>
-                            <div className="fw-semibold text-dark">
-                                <i className="bi bi-person-fill text-amber me-1"></i>{item.inCharge.name}
-                            </div>
-                            {item.inCharge.phone && (
-                                <a href={`tel:${item.inCharge.phone}`} className="text-success fw-bold text-decoration-none small d-inline-block mt-1">
-                                    <i className="bi bi-telephone-fill me-1"></i>{item.inCharge.phone}
-                                </a>
-                            )}
-                        </div>
-                    ) : item.phone ? (
-                        <div>
-                            <div className="fw-semibold text-dark">{item.title}</div>
-                            <a href={`tel:${item.phone}`} className="text-success fw-bold text-decoration-none small d-inline-block mt-1">
-                                <i className="bi bi-telephone-fill me-1"></i>{item.phone}
-                            </a>
-                            {item.role && <div className="text-muted small">({item.role})</div>}
-                        </div>
-                    ) : item.driverNumber ? (
-                        <a href={`tel:${item.driverNumber}`} className="text-success fw-bold text-decoration-none small">
-                            <i className="bi bi-telephone-fill me-1"></i>{item.driverNumber}
-                        </a>
-                    ) : (
-                        '—'
-                    )}
+                    {(() => {
+                        const contact = formatContactDisplay(
+                            item.inCharge,
+                            allItems && allItems.length ? allItems : items,
+                            lookups
+                        );
+
+                        if (contact && contact.name) {
+                            return (
+                                <div>
+                                    <div className="fw-semibold text-dark">
+                                        <i className="bi bi-person-fill text-amber me-1"></i>
+                                        {contact.name}
+                                    </div>
+                                    {contact.phone && (
+                                        <a
+                                            href={`tel:${contact.phone}`}
+                                            className="text-success fw-bold text-decoration-none small d-inline-block mt-0.5"
+                                        >
+                                            <i className="bi bi-telephone-fill me-1"></i>
+                                            {contact.phone}
+                                        </a>
+                                    )}
+                                </div>
+                            );
+                        }
+
+                        if (item.phone) {
+                            return (
+                                <div>
+                                    <div className="fw-semibold text-dark">{item.title}</div>
+                                    <a href={`tel:${item.phone}`} className="text-success fw-bold text-decoration-none small d-inline-block mt-0.5">
+                                        <i className="bi bi-telephone-fill me-1"></i>{item.phone}
+                                    </a>
+                                    {item.role && <div className="text-muted small">({item.role})</div>}
+                                </div>
+                            );
+                        }
+
+                        if (item.driverNumber) {
+                            const rawDriver = String(item.driverNumber).trim();
+                            const directory = Array.isArray(allItems) && allItems.length
+                                ? allItems.filter(i => i && i.tabSlug === 'contacts')
+                                : items.filter(i => i && i.tabSlug === 'contacts');
+
+                            // Find driver in Contact Directory by phone or name
+                            const foundDriver = directory.find(c =>
+                                (c.phone && c.phone.trim() === rawDriver) ||
+                                (c.title && c.title.trim().toLowerCase() === rawDriver.toLowerCase()) ||
+                                String(c._id) === rawDriver
+                            );
+
+                            const driverName = foundDriver ? foundDriver.title : '';
+                            const driverPhone = foundDriver ? foundDriver.phone : rawDriver;
+
+                            return (
+                                <div>
+                                    {driverName && (
+                                        <div className="fw-semibold text-dark">
+                                            <i className="bi bi-person-badge text-amber me-1"></i>
+                                            {driverName}
+                                        </div>
+                                    )}
+                                    <a
+                                        href={`tel:${driverPhone}`}
+                                        className="text-success fw-bold text-decoration-none small d-inline-block mt-0.5"
+                                    >
+                                        <i className="bi bi-telephone-fill me-1"></i>
+                                        {driverPhone}
+                                    </a>
+                                </div>
+                            );
+                        }
+
+                        return <span className="text-muted">—</span>;
+                    })()}
                 </td>
 
                 <td>

@@ -192,6 +192,19 @@ export default function RecordModal({
         setMenuItems(prev => prev ? `${prev}, ${dishName}` : dishName);
     };
 
+    const handleSelectContact = (selectedVal) => {
+        if (!selectedVal) {
+            setInChargeId('');
+            return;
+        }
+        const found = directoryContacts.find(c => c._id === selectedVal || c.title === selectedVal);
+        if (found) {
+            setInChargeId(found.phone ? `${found.title} (${found.phone})` : found.title);
+        } else {
+            setInChargeId(selectedVal);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -288,7 +301,21 @@ export default function RecordModal({
                             </span>
                         </div>
                     </div>
-                    <button type="button" className="btn-close" onClick={onClose}></button>
+
+                    <div className="d-flex align-items-center gap-2">
+                        {/* 👈 Universal Navigation to Master Dropdowns from ANY tab */}
+                        <button
+                            type="button"
+                            className="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1.5 py-1 px-2.5"
+                            title="Open Master Dropdowns (Locations, Vehicles, Dishes)"
+                            onClick={onOpenLookupModal}
+                        >
+                            <i className="bi bi-gear-fill text-amber"></i>
+                            <span className="small fw-semibold d-none d-sm-inline">Manage Dropdowns</span>
+                        </button>
+
+                        <button type="button" className="btn-close" onClick={onClose}></button>
+                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="d-flex flex-column flex-grow-1 overflow-hidden">
@@ -353,10 +380,10 @@ export default function RecordModal({
                                     {/* In-Charge Person from Contact Directory */}
                                     <div className="col-12 col-sm-4">
                                         <label className="modal-label"><i className="bi bi-person"></i> In-Charge Person</label>
-                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => handleSelectContact(e.target.value)}>
                                             <option value="">— Select from Contacts —</option>
                                             {directoryContacts.map(c => (
-                                                <option key={c._id} value={c._id}>
+                                                <option key={c._id} value={c.phone ? `${c.title} (${c.phone})` : c.title}>
                                                     {c.title} {c.phone ? `(${c.phone})` : ''}
                                                 </option>
                                             ))}
@@ -489,10 +516,14 @@ export default function RecordModal({
 
                                 <div className="mb-2">
                                     <label className="modal-label"><i className="bi bi-person"></i> Catering Contact Person</label>
-                                    <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                    <select
+                                        className="modal-select w-100"
+                                        value={inChargeId}
+                                        onChange={(e) => handleSelectContact(e.target.value)}
+                                    >
                                         <option value="">— Select Contact —</option>
                                         {directoryContacts.map(c => (
-                                            <option key={c._id} value={c._id}>
+                                            <option key={c._id} value={c.phone ? `${c.title} (${c.phone})` : c.title}>
                                                 {c.title} {c.phone ? `(${c.phone})` : ''}
                                             </option>
                                         ))}
@@ -560,10 +591,10 @@ export default function RecordModal({
                                 <div className="row g-2 mb-2">
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-person"></i> In-Charge / Contact Person</label>
-                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => handleSelectContact(e.target.value)}>
                                             <option value="">— Select Contact —</option>
                                             {directoryContacts.map(c => (
-                                                <option key={c._id} value={c._id}>
+                                                <option key={c._id} value={c.phone ? `${c.title} (${c.phone})` : c.title}>
                                                     {c.title} {c.phone ? `(${c.phone})` : ''}
                                                 </option>
                                             ))}
@@ -714,10 +745,10 @@ export default function RecordModal({
 
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-person"></i> Assigned Person</label>
-                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => handleSelectContact(e.target.value)}>
                                             <option value="">— Select Contact —</option>
                                             {directoryContacts.map(c => (
-                                                <option key={c._id} value={c._id}>
+                                                <option key={c._id} value={c.phone ? `${c.title} (${c.phone})` : c.title}>
                                                     {c.title} {c.phone ? `(${c.phone})` : ''}
                                                 </option>
                                             ))}
@@ -760,10 +791,10 @@ export default function RecordModal({
 
                                     <div className="col-12 col-sm-6">
                                         <label className="modal-label"><i className="bi bi-person"></i> Assigned Person</label>
-                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                        <select className="modal-select w-100" value={inChargeId} onChange={(e) => handleSelectContact(e.target.value)}>
                                             <option value="">— Select Contact —</option>
                                             {directoryContacts.map(c => (
-                                                <option key={c._id} value={c._id}>
+                                                <option key={c._id} value={c.phone ? `${c.title} (${c.phone})` : c.title}>
                                                     {c.title} {c.phone ? `(${c.phone})` : ''}
                                                 </option>
                                             ))}
@@ -854,10 +885,10 @@ export default function RecordModal({
                                         return (
                                             <div key={field.key} className="mb-2">
                                                 <label className="modal-label"><i className="bi bi-person"></i> In-Charge / Person</label>
-                                                <select className="modal-select w-100" value={inChargeId} onChange={(e) => setInChargeId(e.target.value)}>
+                                                <select className="modal-select w-100" value={inChargeId} onChange={(e) => handleSelectContact(e.target.value)}>
                                                     <option value="">— Select Contact —</option>
                                                     {directoryContacts.map(c => (
-                                                        <option key={c._id} value={c._id}>
+                                                        <option key={c._id} value={c.phone ? `${c.title} (${c.phone})` : c.title}>
                                                             {c.title} {c.phone ? `(${c.phone})` : ''}
                                                         </option>
                                                     ))}

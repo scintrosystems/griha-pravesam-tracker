@@ -12,7 +12,6 @@ router.get('/', async (req, res) => {
 
         const items = await Item.find(filter)
             .populate('location')
-            .populate('inCharge')
             .populate('transportMode')
             .sort({ createdAt: -1 });
 
@@ -30,7 +29,6 @@ router.post('/', auth, async (req, res) => {
 
         const populated = await Item.findById(item._id)
             .populate('location')
-            .populate('inCharge')
             .populate('transportMode');
 
         res.status(201).json(populated);
@@ -44,7 +42,6 @@ router.put('/:id', auth, async (req, res) => {
     try {
         const updated = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true })
             .populate('location')
-            .populate('inCharge')
             .populate('transportMode');
 
         if (!updated) return res.status(404).json({ error: 'Item not found' });

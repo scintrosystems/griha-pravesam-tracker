@@ -12,7 +12,7 @@ const itemSchema = new mongoose.Schema({
     endTime: { type: String, default: '' },
     timeSlot: { type: String, default: '' },
     location: { type: mongoose.Schema.Types.ObjectId, ref: 'Lookup' },
-    inCharge: { type: mongoose.Schema.Types.ObjectId, ref: 'Lookup' },
+    inCharge: { type: String, default: '' },
     transportMode: { type: mongoose.Schema.Types.ObjectId, ref: 'Lookup' },
     description: { type: String, default: '' },
     status: {

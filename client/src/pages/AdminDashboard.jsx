@@ -401,6 +401,7 @@ export default function AdminDashboard({ sidebarOpen, onCloseSidebar }) {
                         activeTabSlug={activeTab}
                         tabs={tabs}
                         lookups={lookups}
+                        allItems={items}
                         isAdmin={true}
                         showSectionExpenses={true}
                         onEdit={(item) => {
